@@ -1,0 +1,30 @@
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using Dapper;
+using KeyAttribute = Dapper.KeyAttribute;
+using RequiredAttribute = Dapper.RequiredAttribute;
+/*[begin custom code head]*/
+//自定义命名空间区域
+/*[end custom code head]*/
+
+namespace {ModelsNamespace}
+{
+	/// <summary>
+	/// {Comment}
+	/// </summary>
+	public class {ModelName}
+	{
+
+		/*[begin custom code body]*/
+		#region 自定义代码区域,重新生成代码不会覆盖
+		#endregion
+		/*[end custom code body]*/
+
+{ModelProperties}
+
+		/*[begin custom code bottom]*/
+		#region 自定义代码区域,重新生成代码不会覆盖
+		#endregion
+		/*[end custom code bottom]*/
+	}
+}

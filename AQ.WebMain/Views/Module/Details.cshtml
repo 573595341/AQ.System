@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "详情";
+}
+
+@Html.AntiForgeryToken()
+<input type="hidden" id="id" value="@ViewBag.Id" />
+<div class="layui-form layui-form-pane layui-main" lay-filter="formData">
+    <div class="layui-form-item">
+        <label class="layui-form-label">名称</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" autocomplete="off" name="Name" lay-filter="Name" style="width:200px" lay-verify="required" lay-verType="tips" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">图标</label>
+        <div class="layui-input-block">
+            <div class="layui-upload">
+                <input type="button" class="layui-btn ico" value="上传图标" />
+                <div class="layui-upload-list" id="preview">
+                    @*<img class="layui-upload-img"  style="width:100px; height:100px">
+                        <p id="previewText"></p>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-block">
+            <input type="number" class="layui-input" style="width:80px;" name="Sort" lay-filter="Sort" lay-verify="" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block">
+            <input type="checkbox" lay-text="启用|停用" name="Status" title="启用" lay-skin="primary" lay-filter="Status" value="1" checked />
+        </div>
+    </div>
+    @*<div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <input type="radio" title="女" value="女" name="sex" />
+                <input type="radio" title="男" value="男" name="sex" />
+            </div>
+        </div>*@
+    <div class="layui-form-item">
+        <div class="layui-input-block layui-btn-container">
+            <button class="layui-btn" lay-submit="" lay-filter="save">保存</button>
+            <button class="layui-btn layui-btn-danger back" lay-filter="back" onclick="javascript:history.back(-1);">返回</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/layui/layui.js?v=2"></script>
+    <script src="~/js/module/moduleDetails.js?v=1"></script>
+}
+
+

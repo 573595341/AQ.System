@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Auto\AQsysKeyRegulationRepository.cs" />
+    <Compile Remove="Auto\AQsysMenuRepository.cs" />
+    <Compile Remove="Auto\AQsysModuleRepository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="1.50.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AQ.Core\AQ.Core.csproj" />
+    <ProjectReference Include="..\AQ.IRepository\AQ.IRepository.csproj" />
+    <ProjectReference Include="..\AQ.ModelExtension\AQ.ModelExtension.csproj" />
+  </ItemGroup>
+
+</Project>

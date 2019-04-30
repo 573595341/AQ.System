@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ResultViewModel\**" />
+    <EmbeddedResource Remove="ResultViewModel\**" />
+    <None Remove="ResultViewModel\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Auto\AQsysKeyRegulationViewModel.cs" />
+    <Compile Remove="Auto\AQsysMenuViewModel.cs" />
+    <Compile Remove="Auto\AQsysModuleViewModel.cs" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Auto\IAQsysKeyRegulationRepository.cs" />
+    <Compile Remove="Auto\IAQsysMenuRepository.cs" />
+    <Compile Remove="Auto\IAQsysModuleRepository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AQ.Core\AQ.Core.csproj" />
+    <ProjectReference Include="..\AQ.ModelExtension\AQ.ModelExtension.csproj" />
+    <ProjectReference Include="..\AQ.Models\AQ.Models.csproj" />
+  </ItemGroup>
+
+</Project>

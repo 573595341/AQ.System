@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewData["Title"] = "菜单管理";
+}
+
+@Html.AntiForgeryToken()
+<div id="dataList" lay-filter="dataList"></div>
+
+<script type="text/html" id="toolbar" lay-filter="tools">
+    <div class="layui-btn-container" style="text-align:right">
+        <button class="layui-btn layui-btn-sm add" lay-event="refresh">刷新</button>
+        <button class="layui-btn layui-btn-sm add" lay-event="add">添加</button>
+    </div>
+</script>
+
+<script type="text/html" id="status">
+    <input type="checkbox" lay-skin="switch" lay-text="启用|停用" lay-filter="changeStatus" value="{{d.Status}}" {{ d.Status == 1 ?'checked':'' }} data-id="{{d.Id}}" />
+</script>
+
+<script type="text/html" id="operation">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm edit" lay-event="edit">编辑</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger del" lay-event="delete">删除</button>
+    </div>
+</script>
+
+@section Scripts{
+    <script src="~/layui/layui.js?v=1"></script>
+    <script src="~/js/menu/menuList.js"></script>
+}

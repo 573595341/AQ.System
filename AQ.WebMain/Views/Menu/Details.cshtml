@@ -1,0 +1,65 @@
+﻿
+@{
+    ViewData["Title"] = "菜单详情";
+}
+
+@Html.AntiForgeryToken()
+<input type="hidden" id="id" value="@ViewBag.Id" />
+<div class="layui-form layui-form-pane layui-main" lay-filter="formData">
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单名称</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" name="Name" autocomplete="off" lay-verify="required" lay-verType="tips" style="width:200px" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">上级菜单</label>
+        <div class="layui-input-block" style="width:200px;">
+            <select id="ParentId" name="ParentId" lay-verify="required" lay-search="">
+                <option value="">直接选择或搜索选择</option>
+                <option value="0">--无上级菜单--</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属模块</label>
+        <div class="layui-input-block" style="width:200px;">
+            <select id="ModuleId" name="ModuleId" lay-verify="required" lay-search="">
+                <option value="">直接选择或搜索选择</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单地址</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" name="PageUrl" autocomplete="off" lay-verify="" style="width:200px" placeholder="例: /Home/Index" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-block">
+            <input type="number" class="layui-input" style="width:80px;" name="Sort" lay-filter="Sort" lay-verify="" value="0" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block">
+            <input type="checkbox" lay-text="启用|停用" name="Status" title="启用" lay-skin="primary" lay-filter="Status" value="1" checked />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block layui-btn-container">
+            <button class="layui-btn" lay-submit="" lay-filter="save">保存</button>
+            <button class="layui-btn layui-btn-danger back" lay-filter="back" onclick="javascript:history.back(-1);">返回</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/layui/layui.js?v=2"></script>
+    <script src="~/js/menu/menuDetails.js?v=1"></script>
+
+
+}
+
+

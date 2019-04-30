@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="xunit" Version="2.4.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AQ.CodeTools\AQ.CodeTools.csproj" />
+    <ProjectReference Include="..\AQ.Core\AQ.Core.csproj" />
+    <ProjectReference Include="..\AQ.IRepository\AQ.IRepository.csproj" />
+    <ProjectReference Include="..\AQ.IServices\AQ.IServices.csproj" />
+    <ProjectReference Include="..\AQ.Repository.SqlServer\AQ.Repository.SqlServer.csproj" />
+    <ProjectReference Include="..\AQ.Services\AQ.Services.csproj" />
+    <ProjectReference Include="..\AQ.ViewModels\AQ.ViewModels.csproj" />
+  </ItemGroup>
+
+</Project>

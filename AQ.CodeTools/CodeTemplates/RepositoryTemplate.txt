@@ -1,0 +1,81 @@
+﻿using AQ.IRepository;
+using AQ.Models;
+using AQ.Core;
+using AQ.Core.Repository;
+using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using Dapper;
+/*[begin custom code head]*/
+//自定义命名空间区域
+using System.Text;
+using Microsoft.Extensions.Logging;
+/*[end custom code head]*/
+
+namespace {RepositoryNamespace}
+{
+    public class {ModelName}Repository : BaseRepository<{ModelName}, {KeyTypeName}>, I{ModelName}Repository
+    {
+
+		/*[begin custom code body]*/
+		#region 自定义代码区域,重新生成代码不会覆盖
+        private ILogger<{ModelName}Repository> logger;
+		public {ModelName}Repository(IOptionsSnapshot<DbOption> option,ILogger<{ModelName}Repository> log) : base(option.Value)
+        {
+            logger = log;
+        }
+		#endregion
+		/*[end custom code body]*/
+        
+		/// <summary>
+        /// 逻辑删除
+        /// </summary>
+        /// <param name="keys"></param>
+        /// <returns></returns>
+        public int DeleteLogical({KeyTypeName}[] keys)
+        {
+            var sql = $"update {ModelName} set IsDelete = 1,ModifyTime = getdate() where {KeyName} in @Keys";
+            return dbConnection.Execute(sql, new { Keys = keys });
+        }
+
+        /// <summary>
+        /// 逻辑删除
+        /// </summary>
+        /// <param name="keys"></param>
+        /// <returns></returns>
+        public async Task<int> DeleteLogicalAsync({KeyTypeName}[] keys)
+        {
+            var sql = $"update {ModelName} set IsDelete = 1,ModifyTime = getdate() where {KeyName} in @Keys";
+            return await dbConnection.ExecuteAsync(sql, new { Keys = keys });
+        }
+
+		/// <summary>
+        /// 更改状态
+        /// </summary>
+        /// <param name="status">状态</param>
+        /// <param name="keys">主键</param>
+        /// <returns></returns>
+        public int UpdateStatus(int status, {KeyTypeName}[] keys)
+        {
+            var sql = $"update {ModelName} set Status = @Status,ModifyTime = getdate() where {KeyName} in @Keys";
+            return dbConnection.Execute(sql, new { Status = status, Key = keys });
+        }
+
+        /// <summary>
+        /// 更改状态
+        /// </summary>
+        /// <param name="status">状态</param>
+        /// <param name="keys">主键</param>
+        /// <returns></returns>
+        public async Task<int> UpdateStatusAsync(int status, {KeyTypeName}[] keys)
+        {
+            var sql = $"update {ModelName} set Status = @Status,ModifyTime = getdate() where {KeyName} in @Keys";
+            return await dbConnection.ExecuteAsync(sql, new { Status = status, Key = keys });
+        }
+
+		/*[begin custom code bottom]*/
+		#region 自定义代码区域,重新生成代码不会覆盖
+		#endregion
+		/*[end custom code bottom]*/
+    }
+}
