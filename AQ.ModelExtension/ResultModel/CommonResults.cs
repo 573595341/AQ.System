@@ -20,12 +20,12 @@ namespace AQ.ModelExtension
 
         #region 权限
         /// <summary>暂无权限</summary>
-        public static readonly BaseResult NoAuthority = new BaseResult(101, "暂无权限");
+        public static readonly BaseResult NoAuthority = new BaseResult(1001, "暂无权限");
         #endregion
 
         #region 参数
         /// <summary>参数错误</summary>
-        public static readonly BaseResult ParameterError = new BaseResult(201, "参数错误");
+        public static readonly BaseResult ParameterError = new BaseResult(2001, "参数错误");
         #endregion
     }
 

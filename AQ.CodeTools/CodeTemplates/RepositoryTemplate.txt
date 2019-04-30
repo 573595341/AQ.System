@@ -1,15 +1,18 @@
-﻿using AQ.IRepository;
-using AQ.Models;
-using AQ.Core;
-using AQ.Core.Repository;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using System.Text;
+using System.Linq;
 using Microsoft.Extensions.Options;
-using Dapper;
+using Microsoft.Extensions.Logging;
 /*[begin custom code head]*/
 //自定义命名空间区域
-using System.Text;
-using Microsoft.Extensions.Logging;
+using Dapper;
+using AQ.Core;
+using AQ.Core.Repository;
+using AQ.Models;
+using AQ.IRepository;
+using AQ.ModelExtension;
+
 /*[end custom code head]*/
 
 namespace {RepositoryNamespace}
@@ -19,10 +22,10 @@ namespace {RepositoryNamespace}
 
 		/*[begin custom code body]*/
 		#region 自定义代码区域,重新生成代码不会覆盖
-        private ILogger<{ModelName}Repository> logger;
-		public {ModelName}Repository(IOptionsSnapshot<DbOption> option,ILogger<{ModelName}Repository> log) : base(option.Value)
+        private readonly ILogger<{ModelName}Repository> _logger;
+		public {ModelName}Repository(IOptionsSnapshot<DbOption> option,ILogger<{ModelName}Repository> logger) : base(option.Value)
         {
-            logger = log;
+            _logger = logger;
         }
 		#endregion
 		/*[end custom code body]*/

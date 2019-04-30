@@ -1,11 +1,10 @@
 using System;
-using AQ.Models;
-using AQ.Core.Repository;
 using System.Threading.Tasks;
 /*[begin custom code head]*/
 //自定义命名空间区域
+using AQ.Models;
+using AQ.Core.Repository;
 using AQ.ModelExtension;
-using AQ.ModelExtension.ConditionModels;
 
 /*[end custom code head]*/
 

@@ -1,8 +1,10 @@
-using AQ.ViewModels;
 using System;
 using System.Collections.Generic;
 /*[begin custom code head]*/
 //自定义命名空间区域
+using AQ.ViewModels;
+using AQ.ModelExtension;
+
 /*[end custom code head]*/
 
 namespace AQ.IServices

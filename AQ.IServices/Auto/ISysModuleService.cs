@@ -1,21 +1,22 @@
-using AQ.ViewModels;
 using System;
 using System.Collections.Generic;
 /*[begin custom code head]*/
 //自定义命名空间区域
+using AQ.ViewModels;
 using AQ.ModelExtension;
+
 /*[end custom code head]*/
 
 namespace AQ.IServices
 {
     public interface ISysModuleService
     {
-		/*[begin custom code body]*/
+        /*[begin custom code body]*/
         #region 自定义代码区域,重新生成代码不会覆盖
         #endregion
         /*[end custom code body]*/
 
-		/*[begin custom code bottom]*/
+        /*[begin custom code bottom]*/
         #region 自定义代码区域,重新生成代码不会覆盖
 
         /// <summary>
@@ -34,9 +35,9 @@ namespace AQ.IServices
         /// <summary>
         /// 获取系统模块详情
         /// </summary>
-        /// <param name="moduleId"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        BaseResult<SysModuleViewModel> GetDetail(string moduleId);
+        BaseResult<SysModuleViewModel> GetDetail(string id);
 
         /// <summary>
         /// 添加系统模块信息
@@ -72,7 +73,7 @@ namespace AQ.IServices
         /// <param name="keys"></param>
         /// <param name="status"></param>
         /// <returns></returns>
-        BaseResult<bool> ChangeStatus(string[] keys, int status);
+        BaseResult ChangeStatus(string[] keys, int status);
 
         #endregion
         /*[end custom code bottom]*/

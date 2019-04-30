@@ -1,18 +1,19 @@
 using System;
-using AQ.IRepository;
-using AQ.Models;
-using AQ.ViewModels;
 using System.Linq;
 using System.Data;
 using System.Collections.Generic;
-using AQ.IServices;
-using AutoMapper;
-using FluentValidation;
 using Microsoft.Extensions.Logging;
 /*[begin custom code head]*/
 //自定义命名空间区域
+using AutoMapper;
+using FluentValidation;
+using AQ.Models;
+using AQ.ViewModels;
+using AQ.IRepository;
+using AQ.IServices;
 using AQ.ModelExtension;
 using AQ.Services.Validation;
+
 /*[end custom code head]*/
 
 namespace AQ.Services
@@ -22,17 +23,17 @@ namespace AQ.Services
 
         /*[begin custom code body]*/
         #region 自定义代码区域,重新生成代码不会覆盖
-        private ISysModuleRepository repository;
-        private IMapper mapper;
-        private ILogger<SysModuleService> logger;
-        private ISysKeyRegulationRepository keyRepository;
+        private readonly ISysModuleRepository _repository;
+        private readonly IMapper _mapper;
+        private readonly ILogger<SysModuleService> _logger;
+        private readonly ISysKeyRegulationRepository _keyRepository;
 
         public SysModuleService(ISysModuleRepository repo, IMapper map, ILogger<SysModuleService> log, ISysKeyRegulationRepository keyReg)
         {
-            repository = repo;
-            mapper = map;
-            logger = log;
-            keyRepository = keyReg;
+            _repository = repo;
+            _mapper = map;
+            _logger = log;
+            _keyRepository = keyReg;
         }
         #endregion
         /*[end custom code body]*/
@@ -51,8 +52,8 @@ namespace AQ.Services
             var data = new List<SysModule>();
             try
             {
-                data = repository.GetList().ToList();
-                result.Data = mapper.Map<List<SysModuleViewModel>>(data.Where(d => !d.IsDelete && d.Status == 1));
+                data = _repository.GetList().ToList();
+                result.Data = _mapper.Map<List<SysModuleViewModel>>(data.Where(d => !d.IsDelete && d.Status == 1));
                 result.ResultCode = CommonResults.Success.ResultCode;
                 result.ResultMsg = CommonResults.Success.ResultMsg;
             }
@@ -60,7 +61,7 @@ namespace AQ.Services
             {
                 result.ResultCode = CommonResults.Exception.ResultCode;
                 result.ResultMsg = CommonResults.Exception.ResultMsg;
-                logger.LogError(ex, "获取模块列表信息异常");
+                _logger.LogError(ex, "获取模块列表信息异常");
             }
             return result;
         }
@@ -73,37 +74,56 @@ namespace AQ.Services
         public ListPagedResult<SysModuleViewModel> GetListPaged(SysModuleCondition condition)
         {
             var result = new ListPagedResult<SysModuleViewModel>();
-            var data = repository.GetListPaged(condition);
-            data.Data.ForEach(d =>
+            try
             {
-                result.Data.Add(mapper.Map<SysModuleViewModel>(d));
-            });
-            result.PageIndex = condition.PageIndex;
-            result.PageSize = condition.PageSize;
-            result.PageCount = data.PageCount;
-            result.TotalData = data.TotalData;
-            result.ResultCode = CommonResults.Success.ResultCode;
-            result.ResultMsg = CommonResults.Success.ResultMsg;
+                var data = _repository.GetListPaged(condition);
+                data.Data.ForEach(d =>
+                {
+                    result.Data.Add(_mapper.Map<SysModuleViewModel>(d));
+                });
+                result.PageIndex = condition.PageIndex;
+                result.PageSize = condition.PageSize;
+                result.PageCount = data.PageCount;
+                result.TotalData = data.TotalData;
+                result.ResultCode = CommonResults.Success.ResultCode;
+                result.ResultMsg = CommonResults.Success.ResultMsg;
+            }
+            catch (Exception ex)
+            {
+                result.ResultCode = CommonResults.Exception.ResultCode;
+                result.ResultMsg = CommonResults.Exception.ResultMsg;
+                _logger.LogError(ex, "获取所有系统模块数据信息异常");
+            }
             return result;
         }
 
         /// <summary>
         /// 获取系统模块详情
         /// </summary>
-        /// <param name="moduleId"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public BaseResult<SysModuleViewModel> GetDetail(string moduleId)
+        public BaseResult<SysModuleViewModel> GetDetail(string id)
         {
             var result = new BaseResult<SysModuleViewModel>();
-            if (string.IsNullOrEmpty(moduleId))
+            if (string.IsNullOrEmpty(id))
             {
-                result.ResultMsg = "参数错误";
+                result.ResultMsg = CommonResults.ParameterError.ResultMsg;
+                result.ResultCode = CommonResults.ParameterError.ResultCode;
                 return result;
             }
-            var data = repository.Get(moduleId);
-            result.Data = mapper.Map<SysModuleViewModel>(data);
-            result.ResultCode = CommonResults.Success.ResultCode;
-            result.ResultMsg = CommonResults.Success.ResultMsg;
+            try
+            {
+                var data = _repository.Get(id);
+                result.Data = _mapper.Map<SysModuleViewModel>(data);
+                result.ResultCode = CommonResults.Success.ResultCode;
+                result.ResultMsg = CommonResults.Success.ResultMsg;
+            }
+            catch (Exception ex)
+            {
+                result.ResultCode = CommonResults.Exception.ResultCode;
+                result.ResultMsg = CommonResults.Exception.ResultMsg;
+                _logger.LogError(ex, "获取系统模块详情异常");
+            }
             return result;
         }
 
@@ -115,25 +135,24 @@ namespace AQ.Services
         public BaseResult Add(SysModuleViewModel model)
         {
             var result = new BaseResult();
-            var validationResult = new ModuleValidation().Validate(model, ruleSet: "Add");
-            if (validationResult.IsValid)
+            try
             {
-                var data = mapper.Map<SysModule>(model);
-                data.Id = keyRepository.GenerateKey("Id", "SysModule");
+                var validationResult = new ModuleValidation().Validate(model, ruleSet: "Add");
+                if (!validationResult.IsValid)
+                {
+                    result.ResultMsg = validationResult.ToString(";");
+                    result.ResultCode = CommonResults.ParameterError.ResultCode;
+                }
+                var data = _mapper.Map<SysModule>(model);
+                data.Id = _keyRepository.GenerateKey("Id", "SysModule");
                 data.CreateUser = string.Empty;
                 data.ModifyUser = string.Empty;
-                if (repository.Insert(data) != null)
-                {
-                    result = CommonResults.Success;
-                }
-                else
-                {
-                    result = CommonResults.Fail;
-                }
+                result = _repository.Insert(data) != null ? result = CommonResults.Success : CommonResults.Fail;
             }
-            else
+            catch (Exception ex)
             {
-                result.ResultMsg = validationResult.ToString(";");
+                result = CommonResults.Exception;
+                _logger.LogError(ex, "添加系统模块信息异常");
             }
             return result;
         }
@@ -146,19 +165,23 @@ namespace AQ.Services
         public BaseResult Update(SysModuleViewModel model)
         {
             var result = new BaseResult();
-            var validationResult = new ModuleValidation().Validate(model, ruleSet: "Update");
-            if (validationResult.IsValid)
+            try
             {
-                var data = mapper.Map<SysModule>(model);
-                data.ModifyTime = DateTime.Now;
-                if (repository.Update(data) > 0)
+                var validationResult = new ModuleValidation().Validate(model, ruleSet: "Update");
+                if (validationResult.IsValid)
                 {
-                    result = CommonResults.Success;
+                    result.ResultMsg = validationResult.ToString(";");
+                    result.ResultCode = CommonResults.ParameterError.ResultCode;
+                    return result;
                 }
+                var data = _mapper.Map<SysModule>(model);
+                data.ModifyTime = DateTime.Now;
+                result = _repository.Update(data) > 0 ? CommonResults.Success : CommonResults.Fail;
             }
-            else
+            catch (Exception ex)
             {
-                result.ResultMsg = validationResult.ToString(";");
+                result = CommonResults.Exception;
+                _logger.LogError(ex, "更新系统模块信息异常");
             }
             return result;
         }
@@ -171,18 +194,19 @@ namespace AQ.Services
         public BaseResult DeleteLogical(string[] keys)
         {
             var result = new BaseResult();
-            if (keys == null || keys.Length == 0)
+            try
             {
-                result.ResultMsg = "参数错误";
-                return result;
+                if (keys == null || keys.Length == 0)
+                {
+                    result = CommonResults.ParameterError;
+                    return result;
+                }
+                result = _repository.DeleteLogical(keys) > 0 ? CommonResults.Success : CommonResults.Fail;
             }
-            if (repository.DeleteLogical(keys) > 0)
+            catch (Exception ex)
             {
-                result = CommonResults.Success;
-            }
-            else
-            {
-                result = CommonResults.Fail;
+                result = CommonResults.Exception;
+                _logger.LogError(ex, "逻辑删除系统模块异常");
             }
             return result;
         }
@@ -197,16 +221,17 @@ namespace AQ.Services
             var result = new BaseResult();
             if (string.IsNullOrEmpty(id))
             {
-                result.ResultMsg = "参数错误";
+                result = CommonResults.ParameterError;
                 return result;
             }
-            if (repository.Delete(id) > 0)
+            try
             {
-                result = CommonResults.Success;
+                result = _repository.Delete(id) > 0 ? CommonResults.Success : CommonResults.Fail;
             }
-            else
+            catch (Exception ex)
             {
-                result = CommonResults.Fail;
+                result = CommonResults.Exception;
+                _logger.LogError(ex, "删除系统模块异常");
             }
             return result;
         }
@@ -217,25 +242,22 @@ namespace AQ.Services
         /// <param name="keys"></param>
         /// <param name="status"></param>
         /// <returns></returns>
-        public BaseResult<bool> ChangeStatus(string[] keys, int status)
+        public BaseResult ChangeStatus(string[] keys, int status)
         {
-            var result = new BaseResult<bool>();
+            var result = new BaseResult();
             if (keys == null || keys.Length == 0)
             {
-                result.ResultCode = CommonResults.ParameterError.ResultCode;
-                result.ResultMsg = CommonResults.ParameterError.ResultMsg;
+                result = CommonResults.ParameterError;
                 return result;
             }
-            result.Data = repository.UpdateStatus(status, keys) > 0;
-            if (result.Data)
+            try
             {
-                result.ResultCode = CommonResults.Success.ResultCode;
-                result.ResultMsg = CommonResults.Success.ResultMsg;
+                result = _repository.UpdateStatus(status, keys) > 0 ? CommonResults.Success : CommonResults.Fail;
             }
-            else
+            catch (Exception ex)
             {
-                result.ResultCode = CommonResults.Fail.ResultCode;
-                result.ResultMsg = CommonResults.Fail.ResultMsg;
+                result = CommonResults.Exception;
+                _logger.LogError(ex, "更改系统模块状态异常");
             }
             return result;
         }

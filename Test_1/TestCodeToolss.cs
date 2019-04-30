@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using AQ.CodeTools.Enums;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Text;
 
 namespace AQ.Test
 {
@@ -18,7 +19,6 @@ namespace AQ.Test
         {
             Assert.Equal(0, 0);
         }
-
 
 
         [Fact]

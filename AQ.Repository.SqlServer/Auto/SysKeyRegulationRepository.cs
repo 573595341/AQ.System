@@ -1,15 +1,18 @@
-using AQ.IRepository;
-using AQ.Models;
-using AQ.Core;
-using AQ.Core.Repository;
 using System;
 using System.Threading.Tasks;
+using System.Text;
+using System.Linq;
 using Microsoft.Extensions.Options;
-using Dapper;
+using Microsoft.Extensions.Logging;
 /*[begin custom code head]*/
 //自定义命名空间区域
-using System.Text;
-using Microsoft.Extensions.Logging;
+using Dapper;
+using AQ.Core;
+using AQ.Core.Repository;
+using AQ.Models;
+using AQ.IRepository;
+using AQ.ModelExtension;
+
 /*[end custom code head]*/
 
 namespace AQ.Repository.SqlServer
@@ -19,10 +22,10 @@ namespace AQ.Repository.SqlServer
 
 		/*[begin custom code body]*/
         #region 自定义代码区域,重新生成代码不会覆盖
-        private ILogger<SysKeyRegulationRepository> logger;
+        private readonly ILogger<SysKeyRegulationRepository> _logger;
         public SysKeyRegulationRepository(IOptionsSnapshot<DbOption> option, ILogger<SysKeyRegulationRepository> log) : base(option.Value)
         {
-            logger = log;
+            _logger = log;
         }
         #endregion
         /*[end custom code body]*/
@@ -86,7 +89,7 @@ namespace AQ.Repository.SqlServer
         {
             if (string.IsNullOrEmpty(keyName) || string.IsNullOrEmpty(tabName))
             {
-                logger.LogError($"生成表{tabName}中的主键({keyName})失败; ERROR:参数为空");
+                _logger.LogError($"生成表{tabName}中的主键({keyName})失败; ERROR:参数为空");
                 return string.Empty;
             }
             var sql = $"exec dbo.P_GenerateKey @KeyName,@TabName";
@@ -96,7 +99,7 @@ namespace AQ.Repository.SqlServer
                     , new SysKeyRegulation() { KeyName = keyName, TabName = tabName });
                 if (keyModel == null)
                 {
-                    logger.LogError($"生成表{tabName}中的主键({keyName})失败; 尚未配置主键信息");
+                    _logger.LogError($"生成表{tabName}中的主键({keyName})失败; 尚未配置主键信息");
                     return string.Empty;
                 }
                 StringBuilder keyStr = new StringBuilder(keyModel.Format ?? string.Empty);
@@ -109,7 +112,7 @@ namespace AQ.Repository.SqlServer
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, $"生成表{tabName}中的主键({keyName})失败; ERROR:{ex.Message}");
+                _logger.LogError(ex, $"生成表{tabName}中的主键({keyName})失败; ERROR:{ex.Message}");
             }
             return string.Empty;
         }

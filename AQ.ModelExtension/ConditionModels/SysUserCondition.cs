@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AQ.ModelExtension.ConditionModels
+namespace AQ.ModelExtension
 {
     public class SysUserCondition : ListPagedRequest
     {

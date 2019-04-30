@@ -22,8 +22,6 @@ namespace AQ.Test
         [Fact]
         public void TestMethod1()
         {
-            //var r = DBContext.Add();
-            //Assert.AreEqual(3, r);
             var path = AppDomain.CurrentDomain.BaseDirectory;
             var services = BuildServiceForSqlServer();
 
@@ -37,6 +35,7 @@ namespace AQ.Test
             //var moduleService = services.GetService<ISysModuleService>();
             //var data = moduleService.GetDetail("MODULE001");
             //var data = moduleService.GetListAll();
+
             var mapper = services.GetService<IMapper>();
             var model = new SysModuleViewModel()
             {

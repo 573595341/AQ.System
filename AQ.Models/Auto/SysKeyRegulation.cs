@@ -1,11 +1,12 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+/*[begin custom code head]*/
+//自定义命名空间区域
 using Dapper;
 using KeyAttribute = Dapper.KeyAttribute;
 using RequiredAttribute = Dapper.RequiredAttribute;
-/*[begin custom code head]*/
-//自定义命名空间区域
+
 /*[end custom code head]*/
 
 namespace AQ.Models

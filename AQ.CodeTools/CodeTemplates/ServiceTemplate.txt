@@ -1,16 +1,19 @@
 ﻿using System;
-using AQ.IRepository;
-using AQ.Models;
-using AQ.ViewModels;
 using System.Linq;
 using System.Data;
 using System.Collections.Generic;
-using AQ.IServices;
-using AutoMapper;
-using FluentValidation;
 using Microsoft.Extensions.Logging;
 /*[begin custom code head]*/
 //自定义命名空间区域
+using AutoMapper;
+using FluentValidation;
+using AQ.Models;
+using AQ.ViewModels;
+using AQ.IRepository;
+using AQ.IServices;
+using AQ.ModelExtension;
+using AQ.Services.Validation;
+
 /*[end custom code head]*/
 
 namespace {ServiceNamespace}
@@ -20,14 +23,14 @@ namespace {ServiceNamespace}
 
 		/*[begin custom code body]*/
 		#region 自定义代码区域,重新生成代码不会覆盖
-		private I{ModelName}Repository repository;
-        private IMapper mapper;
-        private ILogger<{ModelName}Service> logger;
-        public {ModelName}Service(I{ModelName}Repository repo, IMapper map,ILogger<{ModelName}Service> log)
+		private readonly I{ModelName}Repository _repository;
+        private readonly IMapper _mapper;
+        private readonly ILogger<{ModelName}Service> _logger;
+        public {ModelName}Service(I{ModelName}Repository repository, IMapper mapper,ILogger<{ModelName}Service> logger)
         {
-            repository = repo;
-            mapper = map;
-            logger = log;
+            _repository = repository;
+            _mapper = mapper;
+            _logger = logger;
         }
 		#endregion
 		/*[end custom code body]*/

@@ -1,17 +1,18 @@
-using AQ.IRepository;
-using AQ.Models;
-using AQ.Core;
-using AQ.Core.Repository;
 using System;
 using System.Threading.Tasks;
+using System.Text;
+using System.Linq;
 using Microsoft.Extensions.Options;
-using Dapper;
+using Microsoft.Extensions.Logging;
 /*[begin custom code head]*/
 //自定义命名空间区域
-using System.Text;
-using Microsoft.Extensions.Logging;
+using Dapper;
+using AQ.Core;
+using AQ.Core.Repository;
+using AQ.Models;
+using AQ.IRepository;
 using AQ.ModelExtension;
-using System.Linq;
+
 /*[end custom code head]*/
 
 namespace AQ.Repository.SqlServer
@@ -19,17 +20,17 @@ namespace AQ.Repository.SqlServer
     public class SysMenuRepository : BaseRepository<SysMenu, String>, ISysMenuRepository
     {
 
-		/*[begin custom code body]*/
+        /*[begin custom code body]*/
         #region 自定义代码区域,重新生成代码不会覆盖
-        private ILogger<SysMenuRepository> logger;
+        private readonly ILogger<SysMenuRepository> _logger;
         public SysMenuRepository(IOptionsSnapshot<DbOption> option, ILogger<SysMenuRepository> log) : base(option.Value)
         {
-            logger = log;
+            _logger = log;
         }
         #endregion
         /*[end custom code body]*/
-        
-		/// <summary>
+
+        /// <summary>
         /// 逻辑删除
         /// </summary>
         /// <param name="keys"></param>
@@ -51,7 +52,7 @@ namespace AQ.Repository.SqlServer
             return await dbConnection.ExecuteAsync(sql, new { Keys = keys });
         }
 
-		/// <summary>
+        /// <summary>
         /// 更改状态
         /// </summary>
         /// <param name="status">状态</param>
@@ -75,7 +76,7 @@ namespace AQ.Repository.SqlServer
             return await dbConnection.ExecuteAsync(sql, new { Status = status, Key = keys });
         }
 
-		/*[begin custom code bottom]*/
+        /*[begin custom code bottom]*/
         #region 自定义代码区域,重新生成代码不会覆盖
 
         /// <summary>
@@ -89,7 +90,7 @@ namespace AQ.Repository.SqlServer
             var sqlWhere = GetConditionSql(condition);
             result.TotalData = GetDataCount(condition, sqlWhere);
             result.GetPageCount();
-            result.Data = dbConnection.Query<SysMenu>(GetListSql(condition, sqlWhere), condition).ToList();
+            result.Data = dbConnection.Query<SysMenu>(GetListSql(condition, sqlWhere).ToString(), condition).ToList();
             return result;
         }
 
@@ -102,11 +103,33 @@ namespace AQ.Repository.SqlServer
         {
             var result = new ListPagedResult<SysMenu>();
             var sqlWhere = GetConditionSql(condition);
-            result.TotalData = GetDataCount(condition, sqlWhere);
+            result.TotalData = await GetDataCountAsync(condition, sqlWhere);
             result.GetPageCount();
-            var data = await dbConnection.QueryAsync<SysMenu>(GetListSql(condition, sqlWhere), condition);
+            var data = await dbConnection.QueryAsync<SysMenu>(GetListSql(condition, sqlWhere).ToString(), condition);
             result.Data = data.ToList();
             return result;
+        }
+
+        /// <summary>
+        /// 获取分页列表总条数
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <param name="sqlWhere"></param>
+        /// <returns></returns>
+        private int GetDataCount(SysMenuCondition condition, StringBuilder sqlWhere)
+        {
+            return dbConnection.ExecuteScalar<int>(GetListCountSql(condition, sqlWhere).ToString(), condition);
+        }
+
+        /// <summary>
+        /// 获取分页列表总条数
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <param name="sqlWhere"></param>
+        /// <returns></returns>
+        private async Task<int> GetDataCountAsync(SysMenuCondition condition, StringBuilder sqlWhere)
+        {
+            return await dbConnection.ExecuteScalarAsync<int>(GetListCountSql(condition, sqlWhere).ToString(), condition);
         }
 
         /// <summary>
@@ -115,7 +138,7 @@ namespace AQ.Repository.SqlServer
         /// <param name="condition"></param>
         /// <param name="sqlWhere"></param>
         /// <returns></returns>
-        private string GetListSql(SysMenuCondition condition, string sqlWhere)
+        private StringBuilder GetListSql(SysMenuCondition condition, StringBuilder sqlWhere)
         {
             #region sql
             StringBuilder sql = new StringBuilder();
@@ -145,22 +168,22 @@ select * from (
     LEFT JOIN SysMenu b on b.Id = a.ParentId
     WHERE a.IsDelete = 0 {0}
 ) as t where RowNum between {1} and {2}
-", sqlWhere, condition.StartNum, condition.EndNum, string.IsNullOrEmpty(condition.SortName) ? "Sort" : condition.SortName, condition.IsSortByDesc ? "desc" : "asc");
+", sqlWhere, condition.StartNum, condition.EndNum, string.IsNullOrEmpty(condition.SortName) ? "ModifyTime" : condition.SortName, condition.IsSortByDesc ? "desc" : "asc");
             #endregion
-            return sql.ToString();
+            return sql;
         }
 
         /// <summary>
-        /// 获取分页列表总条数
+        /// 获取总数条件字符串
         /// </summary>
         /// <param name="condition"></param>
         /// <param name="sqlWhere"></param>
         /// <returns></returns>
-        private int GetDataCount(SysMenuCondition condition, string sqlWhere)
+        private StringBuilder GetListCountSql(SysMenuCondition condition, StringBuilder sqlWhere)
         {
             #region sql
-            StringBuilder sql = new StringBuilder();
-            sql.AppendFormat(@"
+            StringBuilder countSql = new StringBuilder();
+            countSql.AppendFormat(@"
 select
     count(1)
     FROM SysMenu a
@@ -169,7 +192,7 @@ select
     WHERE a.IsDelete = 0 {0}
 ", sqlWhere);
             #endregion
-            return dbConnection.ExecuteScalar<int>(sql.ToString(), condition);
+            return countSql;
         }
 
         /// <summary>
@@ -177,11 +200,11 @@ select
         /// </summary>
         /// <param name="condition"></param>
         /// <returns></returns>
-        private string GetConditionSql(SysMenuCondition condition)
+        private StringBuilder GetConditionSql(SysMenuCondition condition)
         {
-            if (condition == null) return string.Empty;
-
             StringBuilder sqlWhere = new StringBuilder();
+            if (condition == null) return sqlWhere;
+
             if (condition.IsDelete != null)
             {
                 sqlWhere.Append(" and a.IsDelete = @IsDelete ");
@@ -222,7 +245,7 @@ select
             {
                 sqlWhere.Append(" and c.Id = @Module ");
             }
-            return sqlWhere.ToString();
+            return sqlWhere;
         }
 
         #endregion

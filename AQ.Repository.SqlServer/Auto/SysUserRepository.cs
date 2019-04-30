@@ -1,18 +1,18 @@
-using AQ.IRepository;
-using AQ.Models;
-using AQ.Core;
-using AQ.Core.Repository;
 using System;
 using System.Threading.Tasks;
+using System.Text;
+using System.Linq;
 using Microsoft.Extensions.Options;
-using Dapper;
+using Microsoft.Extensions.Logging;
 /*[begin custom code head]*/
 //自定义命名空间区域
-using System.Text;
-using Microsoft.Extensions.Logging;
-using AQ.ModelExtension.ConditionModels;
+using Dapper;
+using AQ.Core;
+using AQ.Core.Repository;
+using AQ.Models;
+using AQ.IRepository;
 using AQ.ModelExtension;
-using System.Linq;
+
 /*[end custom code head]*/
 
 namespace AQ.Repository.SqlServer
@@ -22,10 +22,10 @@ namespace AQ.Repository.SqlServer
 
         /*[begin custom code body]*/
         #region 自定义代码区域,重新生成代码不会覆盖
-        private ILogger<SysUserRepository> logger;
+        private readonly ILogger<SysUserRepository> _logger;
         public SysUserRepository(IOptionsSnapshot<DbOption> option, ILogger<SysUserRepository> log) : base(option.Value)
         {
-            logger = log;
+            _logger = log;
         }
         #endregion
         /*[end custom code body]*/
@@ -91,7 +91,7 @@ namespace AQ.Repository.SqlServer
             result.TotalData = GetDataCount(condition, sqlWhere);
             result.GetPageCount();
 
-            result.Data = dbConnection.Query<SysUser>(GetListSql(condition, sqlWhere), condition).ToList();
+            result.Data = dbConnection.Query<SysUser>(GetListSql(condition, sqlWhere).ToString(), condition).ToList();
             return result;
         }
 
@@ -106,9 +106,31 @@ namespace AQ.Repository.SqlServer
             var sqlWhere = GetConditionSql(condition);
             result.TotalData = await GetDataCountAsync(condition, sqlWhere);
             result.GetPageCount();
-            var dataTask = await dbConnection.QueryAsync<SysUser>(GetListSql(condition, sqlWhere), condition);
+            var dataTask = await dbConnection.QueryAsync<SysUser>(GetListSql(condition, sqlWhere).ToString(), condition);
             result.Data = dataTask.ToList();
             return result;
+        }
+
+        /// <summary>
+        /// 获取分页列表总条数
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <param name="sqlWhere"></param>
+        /// <returns></returns>
+        private int GetDataCount(SysUserCondition condition, StringBuilder sqlWhere)
+        {
+            return dbConnection.ExecuteScalar<int>(GetListCountSql(condition, sqlWhere).ToString(), condition);
+        }
+
+        /// <summary>
+        /// 获取分页列表总条数
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <param name="sqlWhere"></param>
+        /// <returns></returns>
+        private async Task<int> GetDataCountAsync(SysUserCondition condition, StringBuilder sqlWhere)
+        {
+            return await dbConnection.ExecuteScalarAsync<int>(GetListCountSql(condition, sqlWhere).ToString(), condition);
         }
 
         /// <summary>
@@ -117,7 +139,7 @@ namespace AQ.Repository.SqlServer
         /// <param name="condition"></param>
         /// <param name="sqlWhere"></param>
         /// <returns></returns>
-        private string GetListSql(SysUserCondition condition, string sqlWhere)
+        private StringBuilder GetListSql(SysUserCondition condition, StringBuilder sqlWhere)
         {
             #region sql
             StringBuilder sql = new StringBuilder();
@@ -149,39 +171,22 @@ select * from (
     rownumber
     from SysUser where IsDelete = 0 {0}
 ) as t where RowNum between {1} and {2}
-", sqlWhere, condition.StartNum, condition.EndNum, string.IsNullOrEmpty(condition.SortName) ? "Sort" : condition.SortName, condition.IsSortByDesc ? "desc" : "asc");
+", sqlWhere, condition.StartNum, condition.EndNum, string.IsNullOrEmpty(condition.SortName) ? "ModifyTime" : condition.SortName, condition.IsSortByDesc ? "desc" : "asc");
             #endregion
-            return sql.ToString();
+            return sql;
         }
 
         /// <summary>
-        /// 获取分页列表总条数
+        /// 获取查询列表sql语句
         /// </summary>
         /// <param name="condition"></param>
         /// <param name="sqlWhere"></param>
         /// <returns></returns>
-        private int GetDataCount(SysUserCondition condition, string sqlWhere)
+        private StringBuilder GetListCountSql(SysUserCondition condition, StringBuilder sqlWhere)
         {
-            #region sql
-            StringBuilder sql = new StringBuilder();
-            sql.AppendFormat(@" select count(Id) from SysUser where IsDelete = 0 {0} ", sqlWhere);
-            #endregion
-            return dbConnection.ExecuteScalar<int>(sql.ToString(), condition);
-        }
-
-        /// <summary>
-        /// 获取分页列表总条数
-        /// </summary>
-        /// <param name="condition"></param>
-        /// <param name="sqlWhere"></param>
-        /// <returns></returns>
-        private async Task<int> GetDataCountAsync(SysUserCondition condition, string sqlWhere)
-        {
-            #region sql
-            StringBuilder sql = new StringBuilder();
-            sql.AppendFormat(@" select count(Id) from SysUser where IsDelete = 0 {0} ", sqlWhere);
-            #endregion
-            return await dbConnection.ExecuteScalarAsync<int>(sql.ToString(), condition);
+            StringBuilder countSql = new StringBuilder();
+            countSql.AppendFormat(@" select count(Id) from SysUser where IsDelete = 0 {0} ", sqlWhere);
+            return countSql;
         }
 
         /// <summary>
@@ -189,11 +194,11 @@ select * from (
         /// </summary>
         /// <param name="condition"></param>
         /// <returns></returns>
-        private string GetConditionSql(SysUserCondition condition)
+        private StringBuilder GetConditionSql(SysUserCondition condition)
         {
-            if (condition == null) return string.Empty;
-
             StringBuilder sqlWhere = new StringBuilder();
+            if (condition == null) return sqlWhere;
+
             if (!string.IsNullOrEmpty(condition.Account))
             {
                 sqlWhere.Append(" and Account = @Account ");
@@ -228,7 +233,7 @@ select * from (
             {
                 sqlWhere.Append(" and Status = @Status ");
             }
-            return sqlWhere.ToString();
+            return sqlWhere;
         }
 
         #endregion
