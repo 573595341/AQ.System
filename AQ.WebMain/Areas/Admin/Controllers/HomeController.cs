@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace AQ.WebMain.Controllers
 {
+    [Area("Admin")]
     public class HomeController : Controller
     {
         ILogger<HomeController> logger;
@@ -49,6 +50,45 @@ namespace AQ.WebMain.Controllers
             return View();
         }
 
+        public IActionResult LoadMenu()
+        {
+            var data = new
+            {
+                contentManagement = new List<object>() {
+                    new {
+                        title = "文章列表",
+                        icon = "icon-text",
+                        href="/Home/NewsList",
+                        spread= false
+                    }
+                },
+                memberCenter = new List<object>() {
+                    new {
+                        title= "文章列表",
+                        icon="icon-text",
+                        href="/Home/NewsList",
+                        spread= false
+                    }
+                },
+                systemeSttings = new List<object>() {
+                    new {
+                        title= "文章列表",
+                        icon="icon-text",
+                        href="/Home/NewsList",
+                        spread= false
+                    }
+                },
+                seraphApi = new List<object>() {
+                    new {
+                        title= "文章列表",
+                        icon="icon-text",
+                        href="/Home/NewsList",
+                        spread= false
+                    }
+                }
+            };
+            return Json(data);
+        }
 
         public IActionResult NewsList()
         {

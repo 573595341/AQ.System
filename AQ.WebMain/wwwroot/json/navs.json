@@ -1,5 +1,5 @@
 {
-	"contentManagement": [
+  "contentManagement": [
     {
       "title": "文章列表",
       "icon": "icon-text",
@@ -12,12 +12,12 @@
       "href": "/Home/NewsList",
       "spread": false
     },
-		{
-			"title": "其他页面",
-			"icon": "&#xe630;",
-			"href": "",
-			"spread": false,
-			"children": [
+    {
+      "title": "其他页面",
+      "icon": "&#xe630;",
+      "href": "",
+      "spread": false,
+      "children": [
         {
           "title": "404页面",
           "icon": "&#xe61c;",
@@ -31,23 +31,23 @@
           "spread": false,
           "target": "_blank"
         }
-			]
-		}
-	],
-	"memberCenter": [
-		{
-			"title": "用户中心",
-			"icon": "&#xe612;",
-			"href": "/Home/NewsList",
-			"spread": false
-		},
+      ]
+    }
+  ],
+  "memberCenter": [
+    {
+      "title": "用户中心",
+      "icon": "&#xe612;",
+      "href": "/Home/NewsList",
+      "spread": false
+    },
     {
       "title": "会员等级",
       "icon": "icon-vip",
       "href": "/Home/NewsList",
       "spread": false
     }
-	],
+  ],
   "systemeSttings": [
     {
       "title": "系统基本参数",
@@ -74,19 +74,25 @@
       "spread": false
     },
     {
+      "title": "用户管理",
+      "icon": "&#xe857;",
+      "href": "/Admin/User/Index",
+      "spread": false
+    },
+    {
       "title": "模块管理",
       "icon": "&#xe857;",
-      "href": "/Module/Index",
+      "href": "/Admin/Module/Index",
       "spread": false
     },
     {
       "title": "菜单管理",
       "icon": "&#xe857;",
-      "href": "/Menu/Index",
+      "href": "/Admin/Menu/Index",
       "spread": false
     }
   ],
-	"seraphApi": [
+  "seraphApi": [
     {
       "title": "三级联动模块",
       "icon": "icon-mokuai",
@@ -105,7 +111,5 @@
       "href": "/Home/NewsList",
       "spread": false
     }
-	]
+  ]
 }
-
-

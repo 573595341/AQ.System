@@ -1,8 +1,12 @@
 ﻿
 @{
-    ViewData["Title"] = "菜单管理";
+    ViewData["Title"] = "模块管理";
 }
 
+
+@*<blockquote class="layui-elem-quote layui-bg-green">
+        <div id="nowTime"></div>
+    </blockquote>*@
 @Html.AntiForgeryToken()
 <div id="dataList" lay-filter="dataList"></div>
 
@@ -26,5 +30,6 @@
 
 @section Scripts{
     <script src="~/layui/layui.js?v=1"></script>
-    <script src="~/js/menu/menuList.js"></script>
+    <script src="~/js/backstage/module/moduleList.js"></script>
 }
+

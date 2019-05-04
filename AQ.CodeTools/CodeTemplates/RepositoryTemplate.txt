@@ -61,7 +61,7 @@ namespace {RepositoryNamespace}
         public int UpdateStatus(int status, {KeyTypeName}[] keys)
         {
             var sql = $"update {ModelName} set Status = @Status,ModifyTime = getdate() where {KeyName} in @Keys";
-            return dbConnection.Execute(sql, new { Status = status, Key = keys });
+            return dbConnection.Execute(sql, new { Status = status, Keys = keys });
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace {RepositoryNamespace}
         public async Task<int> UpdateStatusAsync(int status, {KeyTypeName}[] keys)
         {
             var sql = $"update {ModelName} set Status = @Status,ModifyTime = getdate() where {KeyName} in @Keys";
-            return await dbConnection.ExecuteAsync(sql, new { Status = status, Key = keys });
+            return await dbConnection.ExecuteAsync(sql, new { Status = status, Keys = keys });
         }
 
 		/*[begin custom code bottom]*/

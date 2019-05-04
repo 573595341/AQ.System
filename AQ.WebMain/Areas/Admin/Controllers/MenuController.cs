@@ -11,17 +11,18 @@ using Microsoft.Extensions.Logging;
 
 namespace AQ.WebMain.Controllers.Admin
 {
+    [Area("Admin")]
     public class MenuController : Controller
     {
-        ILogger<MenuController> logger;
-        private ISysMenuService menuService;
-        private ISysModuleService moduleService;
+        private readonly ILogger<MenuController> _logger;
+        private readonly ISysMenuService _menuService;
+        private readonly ISysModuleService _moduleService;
 
         public MenuController(ISysMenuService service, ILogger<MenuController> log, ISysModuleService module)
         {
-            logger = log;
-            menuService = service;
-            moduleService = module;
+            _logger = log;
+            _menuService = service;
+            _moduleService = module;
         }
 
         // GET: Menu
@@ -42,28 +43,28 @@ namespace AQ.WebMain.Controllers.Admin
         //[ValidateAntiForgeryToken]
         public ActionResult LoadData(SysMenuCondition data)
         {
-            var result = menuService.GetListPaged(data);
+            var result = _menuService.GetListPaged(data);
             return Json(result);
         }
 
         [HttpPost]
         public ActionResult GetInfo(string id)
         {
-            var result = menuService.GetDetail(id);
+            var result = _menuService.GetDetail(id);
             return Json(result);
         }
 
         [HttpPost]
         public ActionResult MenuData()
         {
-            var result = menuService.GetListAll();
+            var result = _menuService.GetListAll();
             return Json(result);
         }
 
         [HttpPost]
         public ActionResult ModuleData()
         {
-            var result = moduleService.GetListAll();
+            var result = _moduleService.GetListAll();
             return Json(result);
         }
 
@@ -72,7 +73,7 @@ namespace AQ.WebMain.Controllers.Admin
         [ValidateAntiForgeryToken]
         public ActionResult Add(SysMenuViewModel data)
         {
-            var result = menuService.Add(data);
+            var result = _menuService.Add(data);
             return Json(result);
         }
 
@@ -82,7 +83,7 @@ namespace AQ.WebMain.Controllers.Admin
         [ValidateAntiForgeryToken]
         public ActionResult Edit(SysMenuViewModel data)
         {
-            var result = menuService.Update(data);
+            var result = _menuService.Update(data);
             return Json(result);
         }
 
@@ -90,7 +91,7 @@ namespace AQ.WebMain.Controllers.Admin
         [ValidateAntiForgeryToken]
         public ActionResult ChangeStatus(string[] keys, int status)
         {
-            var result = menuService.ChangeStatus(keys, status);
+            var result = _menuService.ChangeStatus(keys, status);
             return Json(result);
         }
 
@@ -99,7 +100,7 @@ namespace AQ.WebMain.Controllers.Admin
         [ValidateAntiForgeryToken]
         public ActionResult Delete(string[] keys)
         {
-            var result = menuService.DeleteLogical(keys);
+            var result = _menuService.DeleteLogical(keys);
             return Json(result);
         }
     }

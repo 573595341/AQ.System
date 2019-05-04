@@ -23,6 +23,8 @@ using AQ.IRepository;
 using AQ.Repository.SqlServer;
 using AQ.Core;
 using AQ.WebMain.Profiles;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace AQ.WebMain
 {
@@ -44,6 +46,22 @@ namespace AQ.WebMain
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            //services.Configure<RazorViewEngineOptions>(options =>
+            //{
+            //    options.ViewLocationFormats.Clear();
+            //    options.ViewLocationFormats.Add("/Views/Admin/{1}/{0}.cshtml");
+            //    options.ViewLocationFormats.Add("/Views/{1}/{0}.cshtml");
+            //    options.ViewLocationFormats.Add("/Views/Shared/{0}.cshtml");
+            //    options.ViewLocationFormats.Add("/Views/Shared/{0}.cshtml");
+
+            //    //options.AreaViewLocationFormats.Clear();
+            //    //options.AreaViewLocationFormats.Add("/Areas/{2}/Views/Member/{1}/{0}.cshtml");
+            //    //options.AreaViewLocationFormats.Add("/Areas/{2}/Views/{1}/{0}.cshtml");
+            //    //options.AreaViewLocationFormats.Add("/Areas/{2}/Views/Shared/{0}.cshtml");
+            //    //options.AreaViewLocationFormats.Add("/Views/Shared/{0}.cshtml");
+            //});
+
             services.Configure<DbOption>(Configuration.GetSection("DbOptions"));
             //services.Configure<DbOption>(options =>
             //{
@@ -78,6 +96,8 @@ namespace AQ.WebMain
             services.AddScopedByAssemblyName("AQ.Repository.SqlServer");
             services.AddScopedByAssemblyName("AQ.Services");
 
+            //services.AddRouting();
+
             //services.AddTransient<IArticleCategoryRepository, ArticleCategoryRepository>();
             //services.AddTransient<IArticleCategoryService, ArticleCategoryService>();
         }
@@ -104,10 +124,37 @@ namespace AQ.WebMain
 
             app.UseMvc(routes =>
             {
+                //路由规则匹配是从上到下的，优先匹配的路由一定要写在最上面。因为路由匹配成功以后，他不会继续匹配下去。
+                //routes.MapRoute(
+                //  name: "admin", // 路由名称，这个只要保证在路由集合中唯一即可
+                //  template: "Admin/{controller=Home}/{action=Index}/{id?}"); //路由规则,匹配以Admin开头的url
+
+                //routes.MapAreaRoute(
+                //    name: "admin",
+                //    areaName: "Admin",
+                //    template: "Admin/{controller}/{action}/{id?}");
+
+
+
+                //routes.MapAreaRoute(
+                //    name: "admin",
+                //    areaName: "Admin",
+                //    template: "{area:exists}/Member/{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapAreaRoute(
+                    name: "admin",
+                    areaName: "Admin",
+                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+                //routes.MapRoute(
+                //    name: "default",
+                //    template: "Admin/{controller=Home}/{action=Index}/{id?}");
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
         }
     }
 }

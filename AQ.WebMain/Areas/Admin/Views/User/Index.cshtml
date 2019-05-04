@@ -1,12 +1,8 @@
 ﻿
 @{
-    ViewData["Title"] = "模块管理";
+    ViewData["Title"] = "用户管理";
 }
 
-
-@*<blockquote class="layui-elem-quote layui-bg-green">
-        <div id="nowTime"></div>
-    </blockquote>*@
 @Html.AntiForgeryToken()
 <div id="dataList" lay-filter="dataList"></div>
 
@@ -29,7 +25,6 @@
 </script>
 
 @section Scripts{
-    <script src="~/layui/layui.js?v=1"></script>
-    <script src="~/js/module/moduleList.js"></script>
+    <script src="~/layui/layui.js"></script>
+    <script src="~/js/backstage/user/userList.js"></script>
 }
-

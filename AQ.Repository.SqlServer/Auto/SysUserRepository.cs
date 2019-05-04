@@ -20,7 +20,7 @@ namespace AQ.Repository.SqlServer
     public class SysUserRepository : BaseRepository<SysUser, String>, ISysUserRepository
     {
 
-        /*[begin custom code body]*/
+		/*[begin custom code body]*/
         #region 自定义代码区域,重新生成代码不会覆盖
         private readonly ILogger<SysUserRepository> _logger;
         public SysUserRepository(IOptionsSnapshot<DbOption> option, ILogger<SysUserRepository> log) : base(option.Value)
@@ -29,8 +29,8 @@ namespace AQ.Repository.SqlServer
         }
         #endregion
         /*[end custom code body]*/
-
-        /// <summary>
+        
+		/// <summary>
         /// 逻辑删除
         /// </summary>
         /// <param name="keys"></param>
@@ -52,7 +52,7 @@ namespace AQ.Repository.SqlServer
             return await dbConnection.ExecuteAsync(sql, new { Keys = keys });
         }
 
-        /// <summary>
+		/// <summary>
         /// 更改状态
         /// </summary>
         /// <param name="status">状态</param>
@@ -61,7 +61,7 @@ namespace AQ.Repository.SqlServer
         public int UpdateStatus(int status, String[] keys)
         {
             var sql = $"update SysUser set Status = @Status,ModifyTime = getdate() where Id in @Keys";
-            return dbConnection.Execute(sql, new { Status = status, Key = keys });
+            return dbConnection.Execute(sql, new { Status = status, Keys = keys });
         }
 
         /// <summary>
@@ -73,10 +73,10 @@ namespace AQ.Repository.SqlServer
         public async Task<int> UpdateStatusAsync(int status, String[] keys)
         {
             var sql = $"update SysUser set Status = @Status,ModifyTime = getdate() where Id in @Keys";
-            return await dbConnection.ExecuteAsync(sql, new { Status = status, Key = keys });
+            return await dbConnection.ExecuteAsync(sql, new { Status = status, Keys = keys });
         }
 
-        /*[begin custom code bottom]*/
+		/*[begin custom code bottom]*/
         #region 自定义代码区域,重新生成代码不会覆盖
 
         /// <summary>

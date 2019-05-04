@@ -11,12 +11,12 @@ namespace AQ.IServices
 {
     public interface ISysMenuService
     {
-        /*[begin custom code body]*/
+		/*[begin custom code body]*/
         #region 自定义代码区域,重新生成代码不会覆盖
         #endregion
         /*[end custom code body]*/
 
-        /*[begin custom code bottom]*/
+		/*[begin custom code bottom]*/
         #region 自定义代码区域,重新生成代码不会覆盖
 
         /// <summary>

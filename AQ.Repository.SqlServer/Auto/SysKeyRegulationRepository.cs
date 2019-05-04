@@ -61,7 +61,7 @@ namespace AQ.Repository.SqlServer
         public int UpdateStatus(int status, Int64[] keys)
         {
             var sql = $"update SysKeyRegulation set Status = @Status,ModifyTime = getdate() where Id in @Keys";
-            return dbConnection.Execute(sql, new { Status = status, Key = keys });
+            return dbConnection.Execute(sql, new { Status = status, Keys = keys });
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace AQ.Repository.SqlServer
         public async Task<int> UpdateStatusAsync(int status, Int64[] keys)
         {
             var sql = $"update SysKeyRegulation set Status = @Status,ModifyTime = getdate() where Id in @Keys";
-            return await dbConnection.ExecuteAsync(sql, new { Status = status, Key = keys });
+            return await dbConnection.ExecuteAsync(sql, new { Status = status, Keys = keys });
         }
 
 		/*[begin custom code bottom]*/

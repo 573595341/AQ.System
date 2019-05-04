@@ -48,7 +48,7 @@
                     "PAGETOKEN": $("input[name='PageToken']").val()
                 },
                 success: function (r) {
-                    if (r.ResultCode == 0 && r.Data) {
+                    if (r.ResultCode == 0) {
                         _this.tableIns = table.reload(_this.tableIns.config.id);
                     } else {
                         alert(r.ResultMsg, { icon: 5 });
@@ -66,7 +66,7 @@
     //分页列表
     objData.tableIns = table.render({
         elem: '#dataList',
-        url: '/Menu/LoadData',
+        url: 'LoadData',
         method: 'post',
         cellMinWidth: 60,
         page: true,

@@ -69,7 +69,7 @@ namespace AQ.WebMain.Profiles
 
             #region SysUser
             CreateMap<SysUser, SysUserViewModel>();
-            CreateMap<SysUserViewModel, SysUser>().ConstructUsing(s =>
+            CreateMap<SysUserViewModel, SysUser>().ConvertUsing(s =>
             new SysUser()
             {
                 Id = s.Id,

@@ -11,12 +11,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AQ.WebMain.Controllers.Admin
 {
+    [Area("Admin")]
     public class ModuleController : Controller
     {
-        private ISysModuleService moduleService;
+        private readonly ISysModuleService _moduleService;
         public ModuleController(ISysModuleService service)
         {
-            moduleService = service;
+            _moduleService = service;
         }
 
         // GET: Module
@@ -35,14 +36,14 @@ namespace AQ.WebMain.Controllers.Admin
         [HttpPost]
         public ActionResult LoadData(SysModuleCondition data)
         {
-            var result = moduleService.GetListPaged(data);
+            var result = _moduleService.GetListPaged(data);
             return Json(result);
         }
 
         [HttpPost]
         public ActionResult GetInfo(string id)
         {
-            var result = moduleService.GetDetail(id);
+            var result = _moduleService.GetDetail(id);
             return Json(result);
         }
 
@@ -50,7 +51,7 @@ namespace AQ.WebMain.Controllers.Admin
         [ValidateAntiForgeryToken]
         public ActionResult Add(SysModuleViewModel data)
         {
-            var result = moduleService.Add(data);
+            var result = _moduleService.Add(data);
             return Json(result);
         }
 
@@ -58,7 +59,7 @@ namespace AQ.WebMain.Controllers.Admin
         [ValidateAntiForgeryToken]
         public ActionResult Edit(SysModuleViewModel data)
         {
-            var result = moduleService.Update(data);
+            var result = _moduleService.Update(data);
             return Json(result);
         }
 
@@ -66,7 +67,7 @@ namespace AQ.WebMain.Controllers.Admin
         [ValidateAntiForgeryToken]
         public ActionResult Delete(string[] keys)
         {
-            var result = moduleService.DeleteLogical(keys);
+            var result = _moduleService.DeleteLogical(keys);
             return Json(result);
         }
 
@@ -74,7 +75,7 @@ namespace AQ.WebMain.Controllers.Admin
         [ValidateAntiForgeryToken]
         public ActionResult ChangeStatus(string[] keys, int status)
         {
-            var result = moduleService.ChangeStatus(keys, status);
+            var result = _moduleService.ChangeStatus(keys, status);
             return Json(result);
         }
 

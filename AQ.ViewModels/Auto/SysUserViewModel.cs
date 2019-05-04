@@ -12,9 +12,9 @@ namespace AQ.ViewModels
 	{
 	
 		/*[begin custom code body]*/
-		#region 自定义代码区域,重新生成代码不会覆盖
-		#endregion
-		/*[end custom code body]*/
+        #region 自定义代码区域,重新生成代码不会覆盖
+        #endregion
+        /*[end custom code body]*/
 
 		/// <summary>Id</summary>
 		public String Id { get; set; }
@@ -82,8 +82,8 @@ namespace AQ.ViewModels
 
 
 		/*[begin custom code bottom]*/
-		#region 自定义代码区域,重新生成代码不会覆盖
-		#endregion
-		/*[end custom code bottom]*/
+        #region 自定义代码区域,重新生成代码不会覆盖
+        #endregion
+        /*[end custom code bottom]*/
 	}
 }
