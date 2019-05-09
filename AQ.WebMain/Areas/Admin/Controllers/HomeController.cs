@@ -27,19 +27,6 @@ namespace AQ.WebMain.Controllers
         [TypeFilter(typeof(ActionFilter))]
         public IActionResult Index()
         {
-            logger.LogDebug("Index");
-            //logger.Info("Action Index");
-            //throw new Exception("action error");
-
-            //var r1 = _articleCategoryService.Insert(new ArticleCategoryViewModel()
-            //{
-            //    //Title = "wangfan",
-            //    //Sort = 0,
-            //    //ParentId = 0
-            //});
-
-            //var r2 = _articleCategoryService.GetList();
-            //Program.CreateWebHostBuilder(null);
             return View();
         }
 

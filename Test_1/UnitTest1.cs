@@ -32,25 +32,10 @@ namespace AQ.Test
             //    new ConfigureFromConfigurationOptions<CodeGenerateOption>();
 
 
-            //var moduleService = services.GetService<ISysModuleService>();
-            //var data = moduleService.GetDetail("MODULE001");
-            //var data = moduleService.GetListAll();
+            //var service = services.GetService<IAuthorizeService>();
+            //service.GetAuthModuleData();
 
-            var mapper = services.GetService<IMapper>();
-            var model = new SysModuleViewModel()
-            {
-                CreateTime = DateTime.Now,
-                CreateUser = "admin",
-                Ico = "admin",
-                Id = "123",
-                IsDelete = false,
-                ModifyTime = DateTime.Now,
-                ModifyUser = "admin",
-                Name = "test",
-                Sort = 1,
-                Status = 1
-            };
-            var data = mapper.Map<SysModule>(model);
+
 
             Assert.Equal(0, 0);
         }
@@ -65,7 +50,8 @@ namespace AQ.Test
             var services = new ServiceCollection();
             services.Configure<DbOption>(options =>
             {
-                options.DbConnString = "Data Source=.;Initial Catalog=AQsys;User ID=sa;Password=123456;Persist Security Info=True;Max Pool Size=50;Min Pool Size=0;Connection Lifetime=300;";//这个必须
+                //options.DbConnString = "Data Source=.;Initial Catalog=AQsys;User ID=sa;Password=123456;Persist Security Info=True;Max Pool Size=50;Min Pool Size=0;Connection Lifetime=300;";//这个必须
+                options.DbConnString = "Data Source = WANGFAN-PC\\SQLEXPRESS;Initial Catalog = AQsys;User Id = sa;Password = 123456;";//这个必须
                 options.DbType = "MSSQL";//数据库类型是SqlServer,其他数据类型参照枚举DatabaseType//这个也必须
             });
             Mapper.Initialize(cfg =>
