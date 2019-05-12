@@ -34,39 +34,50 @@ namespace AQ.Services
         public BaseResult<List<AuthorizeModuleViewModel>> GetAuthModuleData()
         {
             var result = new BaseResult<List<AuthorizeModuleViewModel>>();
-
-            var moduleData = _moduleRepository.GetList().ToList();
-            if (moduleData == null || moduleData.Count() == 0)
+            try
             {
-                result.ResultMsg = $"获取模块信息为空";
+                var moduleData = _moduleRepository.GetList().ToList();
+                if (moduleData == null || moduleData.Count() == 0)
+                {
+                    result.ResultMsg = $"获取模块信息为空";
+                    return result;
+                }
+                var menuData = _menuRepository.GetList();
+                if (menuData == null || menuData.Count() == 0)
+                {
+                    result.ResultMsg = $"获取菜单信息为空";
+                    return result;
+                }
+
+                //权限菜单数据
+                var authMenuData = (from module in moduleData
+                                    join menu in menuData on new { Id = module.Id } equals new { Id = menu.ModuleId }
+                                    select new AuthorizeMenuViewModel
+                                    {
+                                        id = menu.Id,
+                                        title = menu.Name,
+                                        href = menu.PageUrl,
+                                        icon = string.IsNullOrEmpty(menu.Ico)? "&#xe857;": menu.Ico,
+                                        parentId = menu.ParentId,
+                                        moduleId = module.Id,
+                                        sort = menu.Sort,
+                                        moduleSort = module.Sort
+
+                                    }).ToList();
+
+                authMenuData = authMenuData.OrderBy(m => m.sort).ToList();
+                result.Data = GetAuthorizeModules(authMenuData, moduleData);
+                result.Data = result.Data.OrderBy(m => m.sort).ToList();
+                result.ResultCode = CommonResults.Success.ResultCode;
+                result.ResultMsg = CommonResults.Success.ResultMsg;
                 return result;
             }
-            var menuData = _menuRepository.GetList();
-            if (menuData == null || menuData.Count() == 0)
+            catch (Exception ex)
             {
-                result.ResultMsg = $"获取菜单信息为空";
-                return result;
+                result.ResultCode = CommonResults.Exception.ResultCode;
+                result.ResultMsg = CommonResults.Exception.ResultMsg;
+                _logger.LogError(ex, $"获取授权木块菜单信息异常");
             }
-
-            //权限菜单数据
-            var authMenuData = (from module in moduleData
-                                join menu in menuData on new { Id = module.Id } equals new { Id = menu.ModuleId }
-                                select new AuthorizeMenuViewModel
-                                {
-                                    id = menu.Id,
-                                    title = menu.Name,
-                                    href = menu.PageUrl,
-                                    icon = menu.Ico,
-                                    parentId = menu.ParentId,
-                                    moduleId = module.Id,
-                                    sort = menu.Sort,
-                                    moduleSort = module.Sort
-
-                                }).ToList();
-
-            authMenuData.OrderBy(m => m.sort);
-            result.Data = GetAuthorizeModules(authMenuData, moduleData);
-            result.Data.OrderBy(m => m.sort);
             return result;
 
             #region MyRegion

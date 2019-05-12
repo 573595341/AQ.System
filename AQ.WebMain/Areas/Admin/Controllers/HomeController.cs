@@ -11,16 +11,19 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using AQ.WebMain.Filter;
 using AQ.WebMain.Commons;
 using Microsoft.Extensions.Logging;
+using AQ.ModelExtension;
 
 namespace AQ.WebMain.Controllers
 {
     [Area("Admin")]
     public class HomeController : Controller
     {
-        ILogger<HomeController> logger;
-        public HomeController(ILogger<HomeController> log)
+        ILogger<HomeController> _logger;
+        IAuthorizeService _authorizeService;
+        public HomeController(ILogger<HomeController> log, IAuthorizeService authorizeService)
         {
-            logger = log;
+            _logger = log;
+            _authorizeService = authorizeService;
         }
 
         [NonAuthorization]
@@ -91,6 +94,13 @@ namespace AQ.WebMain.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpPost]
+        public IActionResult GetMenuData()
+        {
+            var result = _authorizeService.GetAuthModuleData();
+            return Json(result);
         }
     }
 }

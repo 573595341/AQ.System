@@ -168,7 +168,7 @@ namespace AQ.Services
             try
             {
                 var validationResult = new ModuleValidation().Validate(model, ruleSet: "Update");
-                if (validationResult.IsValid)
+                if (!validationResult.IsValid)
                 {
                     result.ResultMsg = validationResult.ToString(";");
                     result.ResultCode = CommonResults.ParameterError.ResultCode;

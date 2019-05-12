@@ -1,5 +1,6 @@
 
 var $, tab, dataStr, layer;
+var menuData;
 layui.config({
     base: "../../js/"
 }).extend({
@@ -17,26 +18,88 @@ layui.use(['bodyTab', 'form', 'element', 'layer', 'jquery'], function () {
 
     //通过顶部菜单获取左侧二三级菜单   注：此处只做演示之用，实际开发中通过接口传参的方式获取导航数据
     function getData(json) {
-        $.getJSON(tab.tabConfig.url, function (data) {
-            if (json == "contentManagement") {
-                dataStr = data.contentManagement;
+        $.each(getMenuData(), function (i, v) {
+            if (v.id == json) {
+                dataStr = v.menuData;
                 //重新渲染左侧菜单
                 tab.render();
-            } else if (json == "memberCenter") {
-                dataStr = data.memberCenter;
-                //重新渲染左侧菜单
-                tab.render();
-            } else if (json == "systemeSttings") {
-                dataStr = data.systemeSttings;
-                //重新渲染左侧菜单
-                tab.render();
-            } else if (json == "seraphApi") {
-                dataStr = data.seraphApi;
-                //重新渲染左侧菜单
-                tab.render();
+                return false;
             }
         })
+
+        //$.getJSON(tab.tabConfig.url, function (data) {
+        //    if (json == "contentManagement") {
+        //        dataStr = data.contentManagement;
+        //        //重新渲染左侧菜单
+        //        tab.render();
+        //    } else if (json == "memberCenter") {
+        //        dataStr = data.memberCenter;
+        //        //重新渲染左侧菜单
+        //        tab.render();
+        //    } else if (json == "systemeSttings") {
+        //        dataStr = data.systemeSttings;
+        //        //重新渲染左侧菜单
+        //        tab.render();
+        //    } else if (json == "seraphApi") {
+        //        dataStr = data.seraphApi;
+        //        //重新渲染左侧菜单
+        //        tab.render();
+        //    }
+        //})
     }
+
+    //获取第一个模块信息
+    function getFistModule() {
+        $('.topLevelMenus>li').eq(0).addClass('layui-this');
+        getData(getMenuData()[0].id);
+    }
+
+    //获取菜单信息
+    function getMenuData() {
+        if (menuData) {
+            return menuData;
+        }
+        menuData = sessionStorage.getItem('MenuData');
+        if (menuData) {
+            menuData = JSON.parse(menuData);
+            return menuData;
+        }
+        $.ajax({
+            type: 'post',
+            url: '/Admin/Home/GetMenuData',
+            dataType: "json",
+            async: false,
+            success: function (r) {
+                if (r.ResultCode == 0) {
+                    menuData = r.Data;
+                    sessionStorage.setItem('MenuData', JSON.stringify(menuData));
+                } else {
+                    layer.alert(r.ResultMsg, { icon: 5 });
+                }
+            },
+            error: function (xmlHttpRequest, textStatus, errorThrown) {
+                layer.alert('操作失败', { icon: 5 });
+            }
+        });
+        return menuData;
+    }
+
+    //加载模块信息
+    function loadModule() {
+        var moduleHtml_pc = '';
+        var moduleHtml_mobile = '';
+        $.each(getMenuData(), function (i, v) {
+            moduleHtml_pc += '\
+            <li class="layui-nav-item" data-menu="' + v.id + '" pc >\
+                <a href = "javascript:void(0);" ><i class="layui-icon" data-icon="&#xe857;">&#xe857;</i><cite>' + v.name + '</cite></a >\
+            </li> ';
+            moduleHtml_mobile += '\<dd data-menu="' + v.id + '"><a href="javascript:void(0);"><i class="layui-icon" data-icon="&#xe857;">&#xe857;</i><cite>' + v.name + '</cite></a></dd>';
+        })
+        $('.topLevelMenus').eq(0).html(moduleHtml_pc);
+        $('.mobileTopLevelMenus .layui-nav-child').eq(0).html(moduleHtml_mobile);
+    }
+    loadModule();
+
     //页面加载时判断左侧菜单是否显示
     //通过顶部菜单获取左侧菜单
     $(".topLevelMenus li,.mobileTopLevelMenus dd").click(function () {
@@ -64,7 +127,8 @@ layui.use(['bodyTab', 'form', 'element', 'layer', 'jquery'], function () {
     })
 
     //通过顶部菜单获取左侧二三级菜单   注：此处只做演示之用，实际开发中通过接口传参的方式获取导航数据
-    getData("contentManagement");
+    //getData("contentManagement");
+    getFistModule();
 
     //手机设备的简单适配
     $('.site-tree-mobile').on('click', function () {
@@ -140,20 +204,6 @@ layui.use(['bodyTab', 'form', 'element', 'layer', 'jquery'], function () {
 //打开新窗口
 function addTab(_this) {
     tab.tabAdd(_this);
-}
-
-//捐赠弹窗
-function donation() {
-    layer.tab({
-        area: ['260px', '367px'],
-        tab: [{
-            title: "微信",
-            content: "<div style='padding:30px;overflow:hidden;background:#d2d0d0;'><img src='images/wechat.jpg'></div>"
-        }, {
-            title: "支付宝",
-            content: "<div style='padding:30px;overflow:hidden;background:#d2d0d0;'><img src='images/alipay.jpg'></div>"
-        }]
-    })
 }
 
 //图片管理弹窗

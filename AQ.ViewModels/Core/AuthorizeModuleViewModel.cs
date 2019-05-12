@@ -13,6 +13,8 @@ namespace AQ.ViewModels
         public string id { get; set; }
         /// <summary>模块名称</summary>
         public string name { get; set; }
+        /// <summary>图标</summary>
+        public string icon { get; set; }
         /// <summary>模块排序</summary>
         public int sort { get; set; }
 
@@ -21,6 +23,7 @@ namespace AQ.ViewModels
         public AuthorizeModuleViewModel()
         {
             id = name = "";
+            icon = "&#xe857;";
             menuData = new List<AuthorizeMenuViewModel>();
         }
     }

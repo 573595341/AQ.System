@@ -21,7 +21,7 @@ namespace AQ.Services
     public class SysMenuService : ISysMenuService
     {
 
-		/*[begin custom code body]*/
+        /*[begin custom code body]*/
         #region 自定义代码区域,重新生成代码不会覆盖
         private readonly ISysMenuRepository _repository;
         private readonly IMapper _mapper;
@@ -37,9 +37,9 @@ namespace AQ.Services
         }
         #endregion
         /*[end custom code body]*/
-        
 
-		/*[begin custom code bottom]*/
+
+        /*[begin custom code bottom]*/
         #region 自定义代码区域,重新生成代码不会覆盖
 
         /// <summary>
@@ -172,7 +172,12 @@ namespace AQ.Services
             try
             {
                 var validationResult = new MenuValidation().Validate(model, ruleSet: "Update");
-                if (validationResult.IsValid)
+                if (!validationResult.IsValid)
+                {
+                    result.ResultCode = CommonResults.ParameterError.ResultCode;
+                    result.ResultMsg = validationResult.ToString(";");
+                    return result;
+                }
                 {
                     var data = _mapper.Map<SysMenu>(model);
                     data.ModifyTime = DateTime.Now;
@@ -180,10 +185,6 @@ namespace AQ.Services
                     {
                         result = CommonResults.Success;
                     }
-                }
-                else
-                {
-                    result.ResultMsg = validationResult.ToString(";");
                 }
             }
             catch (Exception ex)
