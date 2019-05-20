@@ -15,7 +15,7 @@ namespace AQ.ModelExtension
         public int PageSize { get; set; }
         /// <summary>排序字段</summary>
         public string SortName { get; set; }
-        /// <summary>是否按降序排列(默认false:按升序排列)</summary>
+        /// <summary>是否按降序排列(默认true:按降序排列)</summary>
         public bool IsSortByDesc { get; set; }
 
         /// <summary>
@@ -42,6 +42,7 @@ namespace AQ.ModelExtension
 
         public ListPagedRequest()
         {
+            IsSortByDesc = true;
             if (PageIndex <= 0)
             {
                 PageIndex = 1;

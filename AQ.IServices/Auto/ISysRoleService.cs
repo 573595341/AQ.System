@@ -9,7 +9,7 @@ using AQ.ModelExtension;
 
 namespace AQ.IServices
 {
-    public interface ISysUserService
+    public interface ISysRoleService
     {
         /*[begin custom code body]*/
         #region 自定义代码区域,重新生成代码不会覆盖
@@ -23,35 +23,35 @@ namespace AQ.IServices
         /// 获取所有系统用户数据信息
         /// </summary>
         /// <returns></returns>
-        ListPagedResult<SysUserViewModel> GetListAll();
+        ListPagedResult<SysRoleViewModel> GetListAll();
 
         /// <summary>
         /// 获取所有系统用户数据信息
         /// </summary>
         /// <param name="condition"></param>
         /// <returns></returns>
-        ListPagedResult<SysUserViewModel> GetListPaged(SysUserCondition condition);
+        ListPagedResult<SysRoleViewModel> GetListPaged(SysRoleCondition condition);
 
         /// <summary>
         /// 获取系统用户详情
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        BaseResult<SysUserViewModel> GetDetail(string id);
+        BaseResult<SysRoleViewModel> GetDetail(string id);
 
         /// <summary>
         /// 添加系统用户信息
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        BaseResult Add(SysUserViewModel model);
+        BaseResult Add(SysRoleViewModel model);
 
         /// <summary>
         /// 更新系统用户信息
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        BaseResult Update(SysUserViewModel model);
+        BaseResult Update(SysRoleViewModel model);
 
         /// <summary>
         /// 逻辑删除

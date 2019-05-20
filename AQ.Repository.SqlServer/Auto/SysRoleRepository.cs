@@ -17,15 +17,15 @@ using AQ.ModelExtension;
 
 namespace AQ.Repository.SqlServer
 {
-    public class SysModuleRepository : BaseRepository<SysModule, String>, ISysModuleRepository
+    public class SysRoleRepository : BaseRepository<SysRole, String>, ISysRoleRepository
     {
 
         /*[begin custom code body]*/
         #region 自定义代码区域,重新生成代码不会覆盖
-        private readonly ILogger<SysModuleRepository> _logger;
-        public SysModuleRepository(IOptionsSnapshot<DbOption> option, ILogger<SysModuleRepository> log) : base(option.Value)
+        private readonly ILogger<SysRoleRepository> _logger;
+        public SysRoleRepository(IOptionsSnapshot<DbOption> option, ILogger<SysRoleRepository> logger) : base(option.Value)
         {
-            _logger = log;
+            _logger = logger;
         }
         #endregion
         /*[end custom code body]*/
@@ -37,7 +37,7 @@ namespace AQ.Repository.SqlServer
         /// <returns></returns>
         public int DeleteLogical(String[] keys)
         {
-            var sql = $"update SysModule set IsDelete = 1,ModifyTime = getdate() where Id in @Keys";
+            var sql = $"update SysRole set IsDelete = 1,ModifyTime = getdate() where Id in @Keys";
             return dbConnection.Execute(sql, new { Keys = keys });
         }
 
@@ -48,7 +48,7 @@ namespace AQ.Repository.SqlServer
         /// <returns></returns>
         public async Task<int> DeleteLogicalAsync(String[] keys)
         {
-            var sql = $"update SysModule set IsDelete = 1,ModifyTime = getdate() where Id in @Keys";
+            var sql = $"update SysRole set IsDelete = 1,ModifyTime = getdate() where Id in @Keys";
             return await dbConnection.ExecuteAsync(sql, new { Keys = keys });
         }
 
@@ -60,7 +60,7 @@ namespace AQ.Repository.SqlServer
         /// <returns></returns>
         public int UpdateStatus(int status, String[] keys)
         {
-            var sql = $"update SysModule set Status = @Status,ModifyTime = getdate() where Id in @Keys";
+            var sql = $"update SysRole set Status = @Status,ModifyTime = getdate() where Id in @Keys";
             return dbConnection.Execute(sql, new { Status = status, Keys = keys });
         }
 
@@ -72,7 +72,7 @@ namespace AQ.Repository.SqlServer
         /// <returns></returns>
         public async Task<int> UpdateStatusAsync(int status, String[] keys)
         {
-            var sql = $"update SysModule set Status = @Status,ModifyTime = getdate() where Id in @Keys";
+            var sql = $"update SysRole set Status = @Status,ModifyTime = getdate() where Id in @Keys";
             return await dbConnection.ExecuteAsync(sql, new { Status = status, Keys = keys });
         }
 
@@ -84,14 +84,14 @@ namespace AQ.Repository.SqlServer
         /// </summary>
         /// <param name="condition"></param>
         /// <returns></returns>
-        public ListPagedResult<SysModule> GetListPaged(SysModuleCondition condition)
+        public ListPagedResult<SysRole> GetListPaged(SysRoleCondition condition)
         {
-            var result = new ListPagedResult<SysModule>();
+            var result = new ListPagedResult<SysRole>();
             var sqlWhere = GetConditionSql(condition);
             result.TotalData = GetDataCount(condition, sqlWhere);
             result.GetPageCount();
 
-            result.Data = dbConnection.Query<SysModule>(GetListSql(condition, sqlWhere).ToString(), condition).ToList();
+            result.Data = dbConnection.Query<SysRole>(GetListSql(condition, sqlWhere).ToString(), condition).ToList();
             return result;
         }
 
@@ -100,13 +100,13 @@ namespace AQ.Repository.SqlServer
         /// </summary>
         /// <param name="condition"></param>
         /// <returns></returns>
-        public async Task<ListPagedResult<SysModule>> GetListPagedAsync(SysModuleCondition condition)
+        public async Task<ListPagedResult<SysRole>> GetListPagedAsync(SysRoleCondition condition)
         {
-            var result = new ListPagedResult<SysModule>();
+            var result = new ListPagedResult<SysRole>();
             var sqlWhere = GetConditionSql(condition);
             result.TotalData = await GetDataCountAsync(condition, sqlWhere);
             result.GetPageCount();
-            var data = await dbConnection.QueryAsync<SysModule>(GetListSql(condition, sqlWhere).ToString(), condition);
+            var data = await dbConnection.QueryAsync<SysRole>(GetListSql(condition, sqlWhere).ToString(), condition);
             result.Data = data.ToList();
             return result;
         }
@@ -118,7 +118,7 @@ namespace AQ.Repository.SqlServer
         /// <param name="condition"></param>
         /// <param name="sqlWhere"></param>
         /// <returns></returns>
-        private int GetDataCount(SysModuleCondition condition, StringBuilder sqlWhere)
+        private int GetDataCount(SysRoleCondition condition, StringBuilder sqlWhere)
         {
             return dbConnection.ExecuteScalar<int>(GetListCountSql(condition, sqlWhere).ToString(), condition);
         }
@@ -129,7 +129,7 @@ namespace AQ.Repository.SqlServer
         /// <param name="condition"></param>
         /// <param name="sqlWhere"></param>
         /// <returns></returns>
-        private async Task<int> GetDataCountAsync(SysModuleCondition condition, StringBuilder sqlWhere)
+        private async Task<int> GetDataCountAsync(SysRoleCondition condition, StringBuilder sqlWhere)
         {
             return await dbConnection.ExecuteScalarAsync<int>(GetListCountSql(condition, sqlWhere).ToString(), condition);
         }
@@ -140,7 +140,7 @@ namespace AQ.Repository.SqlServer
         /// <param name="condition"></param>
         /// <param name="sqlWhere"></param>
         /// <returns></returns>
-        private StringBuilder GetListSql(SysModuleCondition condition, StringBuilder sqlWhere)
+        private StringBuilder GetListSql(SysRoleCondition condition, StringBuilder sqlWhere)
         {
             #region sql
             StringBuilder sql = new StringBuilder();
@@ -158,7 +158,7 @@ select * from (
     ,[CreateUser]
     ,[ModifyUser]
     ,[IsDelete]
-    from SysModule where IsDelete = 0 {0}
+    from SysRole where IsDelete = 0 {0}
 ) as t where RowNum between {1} and {2}
 ", sqlWhere, condition.StartNum, condition.EndNum, string.IsNullOrEmpty(condition.SortName) ? "ModifyTime" : condition.SortName, condition.IsSortByDesc ? "desc" : "asc");
             #endregion
@@ -171,10 +171,10 @@ select * from (
         /// <param name="condition"></param>
         /// <param name="sqlWhere"></param>
         /// <returns></returns>
-        private StringBuilder GetListCountSql(SysModuleCondition condition, StringBuilder sqlWhere)
+        private StringBuilder GetListCountSql(SysRoleCondition condition, StringBuilder sqlWhere)
         {
             StringBuilder countSql = new StringBuilder();
-            countSql.AppendFormat(@" select count(Id) from SysModule where IsDelete = 0 {0} ", sqlWhere);
+            countSql.AppendFormat(@" select count(Id) from SysRole where IsDelete = 0 {0} ", sqlWhere);
             return countSql;
         }
 
@@ -183,7 +183,7 @@ select * from (
         /// </summary>
         /// <param name="condition"></param>
         /// <returns></returns>
-        private StringBuilder GetConditionSql(SysModuleCondition condition)
+        private StringBuilder GetConditionSql(SysRoleCondition condition)
         {
             StringBuilder sqlWhere = new StringBuilder();
             if (condition == null) return sqlWhere;

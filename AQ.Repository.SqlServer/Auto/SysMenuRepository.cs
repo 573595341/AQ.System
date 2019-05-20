@@ -205,10 +205,6 @@ select
             StringBuilder sqlWhere = new StringBuilder();
             if (condition == null) return sqlWhere;
 
-            if (condition.IsDelete != null)
-            {
-                sqlWhere.Append(" and a.IsDelete = @IsDelete ");
-            }
             if (condition.CreateTime != null)
             {
                 sqlWhere.Append(" and a.CreateTime = @CreateTime ");

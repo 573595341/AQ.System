@@ -15,7 +15,7 @@ namespace AQ.WebMain.Profiles
             //CreateMap<AQsysKeyRegulation, AQsysKeyRegulationViewModel>();
             //CreateMap<AQsysMenu, AQsysMenuViewModel>();
             //CreateMap<AQsysModule, AQsysModuleViewModel>();
-            
+
             //主键规则
             CreateMap<SysKeyRegulation, SysKeyRegulationViewModel>();
 
@@ -93,7 +93,23 @@ namespace AQ.WebMain.Profiles
                 CreateUser = s.CreateUser ?? string.Empty,
                 ModifyTime = s.ModifyTime,
                 ModifyUser = s.ModifyUser ?? string.Empty
-            }); 
+            });
+            #endregion
+
+            #region SysRole
+            CreateMap<SysRole, SysRoleViewModel>();
+            CreateMap<SysRoleViewModel, SysRole>().ConvertUsing(s =>
+            new SysRole()
+            {
+                Id = s.Id,
+                Name = s.Name ?? string.Empty,
+                Status = s.Status,
+                IsDelete = s.IsDelete,
+                CreateTime = s.CreateTime,
+                CreateUser = s.CreateUser ?? string.Empty,
+                ModifyTime = s.ModifyTime,
+                ModifyUser = s.ModifyUser ?? string.Empty
+            });
             #endregion
         }
     }
