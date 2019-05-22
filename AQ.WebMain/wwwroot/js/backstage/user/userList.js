@@ -130,6 +130,10 @@
                     layer.close(index);
                 });
                 break;
+            case 'role':
+                //alert(1);
+                window.parent.toTab({ url:'/Admin/Role/Index',text:'角色1' });
+                break;
             default:
                 break;
         }
@@ -137,6 +141,7 @@
 
     //工具栏事件
     table.on('toolbar(dataList)', function (obj) {
+        debugger;
         switch (obj.event) {
             case 'add':
                 location.href = 'Details';
@@ -144,6 +149,7 @@
             case 'refresh':
                 objData.tableIns = table.reload(objData.tableIns.config.id);
                 break;
+           
             default:
                 break;
         }

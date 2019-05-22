@@ -96,10 +96,10 @@
         },
         cols: [[
             { type: 'checkbox', fixed: "left", width: 50 }
-            , { field: 'Id', title: 'ID', width: '10%', align: "center" }
-            , { field: 'Name', title: '角色名称', width: '60%', align: "center" }
+            , { field: 'Id', title: 'ID', minWidth: 10, align: "center" }
+            , { field: 'Name', title: '角色名称', minWidth: 200, align: "center" }
             , { field: 'Status', title: '状态', minWidth: 50, align: 'center', templet: '#status' }
-            , { fixed: 'right', title: '操作', toolbar: '#operation', width: 150 }
+            , { fixed: 'right', title: '操作', toolbar: '#operation', minWidth: 200 }
         ]]
     });
 

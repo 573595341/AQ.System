@@ -206,6 +206,11 @@ function addTab(_this) {
     tab.tabAdd(_this);
 }
 
+//切换到指定页签 tabData:{url:'',text:''}
+function toTab(tabData) {
+    tab.toTab(tabData);
+}
+
 //图片管理弹窗
 function showImg() {
     $.getJSON('json/images.json', function (json) {
