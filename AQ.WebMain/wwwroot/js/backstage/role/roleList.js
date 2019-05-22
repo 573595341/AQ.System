@@ -82,7 +82,7 @@
             limitName: 'PageSize'
         },
         where: {
-            //search: 'adasd'
+            search: 'adasd'
         },
         //done: function (res, curr, count) {
         //    //console.log('curr==' + curr);
@@ -96,24 +96,10 @@
         },
         cols: [[
             { type: 'checkbox', fixed: "left", width: 50 }
-            , { field: 'Id', title: 'ID', minWidth: 50, align: "center" }
-            , { field: 'Account', title: '账号', minWidth: 20, align: "center" }
-            , { field: 'CName', title: '姓名', minWidth: 20, align: "center" }
-            , { field: 'NickName', title: '昵称', minWidth: 50, align: "center" }
-            , { field: 'Mobile', title: '手机号码', minWidth: 20, align: "center" }
-            , { field: 'JobCode', title: '工号', minWidth: 20, align: "center" }
-            , {
-                field: 'Sex', title: '性别', minWidth: 20, align: "center", templet: function (d) {
-                    return d.Sex > 0 ? d.Sex == 1 ? '男' : '女' : '暂无';
-                }
-            }
-            , {
-                field: 'Birthday', title: '生日', minWidth: 20, align: 'center', templet: function (d) {
-                    return d.Birthday ? d.Birthday.substring(0, 10) : '';
-                }
-            }
-            , { field: 'Status', title: '状态', minWidth: 20, align: 'center', templet: '#status' }
-            , { fixed: 'right', title: '操作', toolbar: '#operation', width: 200 }
+            , { field: 'Id', title: 'ID', width: '10%', align: "center" }
+            , { field: 'Name', title: '角色名称', width: '60%', align: "center" }
+            , { field: 'Status', title: '状态', minWidth: 50, align: 'center', templet: '#status' }
+            , { fixed: 'right', title: '操作', toolbar: '#operation', width: 150 }
         ]]
     });
 

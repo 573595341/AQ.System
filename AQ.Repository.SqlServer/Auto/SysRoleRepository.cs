@@ -150,8 +150,6 @@ select * from (
     ROW_NUMBER() over(order by {3} {4}) as RowNum
     ,[Id]
     ,[Name]
-    ,[Ico]
-    ,[Sort]
     ,[Status]
     ,[CreateTime]
     ,[ModifyTime]
@@ -188,24 +186,6 @@ select * from (
             StringBuilder sqlWhere = new StringBuilder();
             if (condition == null) return sqlWhere;
 
-            if (condition.CreateTime != null)
-            {
-                sqlWhere.Append(" and CreateTime = @CreateTime ");
-            }
-            if (condition.ModifyTime != null)
-            {
-                sqlWhere.Append(" and ModifyTime = @ModifyTime ");
-            }
-            if (!string.IsNullOrEmpty(condition.CreateUser))
-            {
-                sqlWhere.Append(" and CreateUser like @CreateUser ");
-                condition.CreateUser = $"{condition.CreateUser}%";
-            }
-            if (!string.IsNullOrEmpty(condition.ModifyUser))
-            {
-                sqlWhere.Append(" and ModifyUser like @ModifyUser ");
-                condition.ModifyUser = $"{condition.ModifyUser}%";
-            }
             if (!string.IsNullOrEmpty(condition.Id))
             {
                 sqlWhere.Append(" and Id = @Id ");
@@ -214,6 +194,10 @@ select * from (
             {
                 sqlWhere.Append(" and Name like @Name ");
                 condition.Name = $"{condition.Name}%";
+            }
+            if (condition.Status != null)
+            {
+                sqlWhere.Append(" and Status = @Status ");
             }
             return sqlWhere;
         }

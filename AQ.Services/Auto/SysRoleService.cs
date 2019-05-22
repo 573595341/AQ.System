@@ -43,7 +43,7 @@ namespace AQ.Services
         #region 自定义代码区域,重新生成代码不会覆盖
 
         /// <summary>
-        /// 获取所有系统用户数据信息
+        /// 获取所有系统角色数据信息
         /// </summary>
         /// <returns></returns>
         public ListPagedResult<SysRoleViewModel> GetListAll()
@@ -60,13 +60,13 @@ namespace AQ.Services
             {
                 result.ResultCode = CommonResults.Exception.ResultCode;
                 result.ResultMsg = CommonResults.Exception.ResultMsg;
-                _logger.LogError(ex, "获取用户列表信息异常");
+                _logger.LogError(ex, "获取角色列表信息异常");
             }
             return result;
         }
 
         /// <summary>
-        /// 获取所有系统用户数据信息
+        /// 获取所有系统角色数据信息
         /// </summary>
         /// <param name="condition"></param>
         /// <returns></returns>
@@ -91,13 +91,13 @@ namespace AQ.Services
             {
                 result.ResultCode = CommonResults.Exception.ResultCode;
                 result.ResultMsg = CommonResults.Exception.ResultMsg;
-                _logger.LogError(ex, "获取用户列表信息异常");
+                _logger.LogError(ex, "获取角色列表信息异常");
             }
             return result;
         }
 
         /// <summary>
-        /// 获取系统用户详情
+        /// 获取系统角色详情
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -121,13 +121,13 @@ namespace AQ.Services
             {
                 result.ResultCode = CommonResults.Exception.ResultCode;
                 result.ResultMsg = CommonResults.Exception.ResultMsg;
-                _logger.LogError(ex, "获取用户信息异常");
+                _logger.LogError(ex, "获取角色信息异常");
             }
             return result;
         }
 
         /// <summary>
-        /// 添加系统用户信息
+        /// 添加系统角色信息
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -152,13 +152,13 @@ namespace AQ.Services
             catch (Exception ex)
             {
                 result = CommonResults.Exception;
-                _logger.LogError(ex, "添加系统用户信息异常");
+                _logger.LogError(ex, "添加系统角色信息异常");
             }
             return result;
         }
 
         /// <summary>
-        /// 更新系统用户信息
+        /// 更新系统角色信息
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -185,7 +185,7 @@ namespace AQ.Services
             {
                 result.ResultCode = CommonResults.Exception.ResultCode;
                 result.ResultMsg = CommonResults.Exception.ResultMsg;
-                _logger.LogError(ex, "更新系统用户信息异常");
+                _logger.LogError(ex, "更新系统角色信息异常");
             }
             return result;
         }
@@ -211,7 +211,7 @@ namespace AQ.Services
             {
                 result.ResultCode = CommonResults.Exception.ResultCode;
                 result.ResultMsg = CommonResults.Exception.ResultMsg;
-                _logger.LogError(ex, "逻辑删除系统用户异常");
+                _logger.LogError(ex, "逻辑删除系统角色异常");
             }
             return result;
         }
@@ -235,7 +235,7 @@ namespace AQ.Services
             catch (Exception ex)
             {
                 result = CommonResults.Exception;
-                _logger.LogError(ex, "删除系统用户异常");
+                _logger.LogError(ex, "删除系统角色异常");
             }
             return result;
         }
@@ -261,7 +261,7 @@ namespace AQ.Services
             catch (Exception ex)
             {
                 result = CommonResults.Exception;
-                _logger.LogError(ex, "更改系统用户状态异常");
+                _logger.LogError(ex, "更改系统角色状态异常");
             }
             return result;
         }

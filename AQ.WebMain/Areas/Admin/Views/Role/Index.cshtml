@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "用户管理";
+    ViewData["Title"] = "角色管理";
 }
 
 @Html.AntiForgeryToken()
@@ -19,7 +19,6 @@
 
 <script type="text/html" id="operation">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm role" lay-event="role">分配角色</button>
         <button class="layui-btn layui-btn-sm edit" lay-event="edit">编辑</button>
         <button class="layui-btn layui-btn-sm layui-btn-danger del" lay-event="delete">删除</button>
     </div>
@@ -27,5 +26,5 @@
 
 @section Scripts{
     <script src="~/layui/layui.js"></script>
-    <script src="~/js/backstage/user/userList.js?v=1"></script>
+    <script src="~/js/backstage/role/roleList.js"></script>
 }
