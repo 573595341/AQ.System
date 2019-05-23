@@ -61,5 +61,4 @@ namespace AQ.ViewModels
             children = new List<AuthorizeMenuViewModel>();
         }
     }
-
 }

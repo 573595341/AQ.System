@@ -61,8 +61,6 @@ namespace AQ.ViewModels
 		/// <summary>IsDelete</summary>
 		public Boolean IsDelete { get; set; }
 
-
-
 		/*[begin custom code bottom]*/
         #region 自定义代码区域,重新生成代码不会覆盖
         /// <summary>上级菜单名称</summary>

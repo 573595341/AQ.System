@@ -50,6 +50,14 @@ namespace AQ.Core.Repository
         /// <param name="entity"></param>
         /// <returns></returns>
         TKey Insert(T entity);
+
+        /// <summary>
+        /// 插入一条记录并返回主键值(自增类型返回主键值，否则返回null)
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        int? InsertByInt(T entity);
+
         /// <summary>
         /// 更新一条数据并返回影响的行数
         /// </summary>
@@ -134,7 +142,15 @@ namespace AQ.Core.Repository
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        Task<int?> InsertAsync(T entity);
+        Task<TKey> InsertAsync(T entity);
+
+        /// <summary>
+        /// 插入一条记录并返回主键值
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        Task<int?> InsertByIntAsync(T entity);
+
         /// <summary>
         /// 更新一条数据并返回影响的行数
         /// </summary>

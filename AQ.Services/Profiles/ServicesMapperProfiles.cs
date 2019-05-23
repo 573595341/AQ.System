@@ -111,6 +111,23 @@ namespace AQ.WebMain.Profiles
                 ModifyUser = s.ModifyUser ?? string.Empty
             });
             #endregion
+
+            #region SysPermission
+            CreateMap<SysPermission, SysPermissionViewModel>();
+            CreateMap<SysPermissionViewModel, SysPermission>().ConvertUsing(s =>
+            new SysPermission()
+            {
+                Id = s.Id,
+                PerType = s.PerType,
+                ResourceId = s.ResourceId,
+                Status = s.Status,
+                IsDelete = s.IsDelete,
+                CreateTime = s.CreateTime,
+                CreateUser = s.CreateUser ?? string.Empty,
+                ModifyTime = s.ModifyTime,
+                ModifyUser = s.ModifyUser ?? string.Empty
+            });
+            #endregion
         }
     }
 }

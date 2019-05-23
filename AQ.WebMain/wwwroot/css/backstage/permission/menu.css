@@ -1,0 +1,205 @@
+﻿body {
+    font-size: 14px;
+    color: #555555;
+}
+
+.container {
+    border: 1px solid #eeeeee;
+    padding: 50px;
+    min-width: 800px;
+}
+
+/* 菜单 */
+.resource-menu {
+    /* display: none; */
+    border: solid #eeeeee 1px;
+    border-radius: 5px;
+    margin: 0px 0px 20px 0px;
+    box-shadow: 2px 2px 5px #eeeeee;
+}
+
+.resource-item {
+    overflow: hidden;
+    display: flex;
+    height: 40px;
+    margin: 0px 0px 0px 0px;
+    border-bottom: solid #eeeeee 1px;
+    /* border-radius: 5px; */
+    transition: height 300ms;
+}
+
+.resource-child {
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    height: 30px;
+    margin: 10px 10px;
+    border: solid #eeeeee 1px;
+    transition: height 300ms, margin 300ms, border 300ms;
+    border-radius: 5px;
+    /* justify-content: center; */
+}
+
+.resource-child-hide {
+    height: 0px;
+    border: solid #cccccc 0px;
+    margin: 0px 5px;
+}
+
+.resource-item-name,
+.resource-child-name {
+    display: flex;
+    width: 60%;
+    height: 100%;
+    align-items: center;
+    padding: 0px 0px 0px 10px;
+    /* background: aqua; */
+    /* border: solid #cccccc 1px; */
+}
+
+.resource-item-name {
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.resource-item:hover {
+    background-color: #dddddd;
+}
+
+.resource-child:hover {
+    background-color: #eeeeee;
+}
+
+.resource-item-operation,
+.resource-child-operation {
+    display: flex;
+    width: 40%;
+    height: 100%;
+    align-items: center;
+    justify-content: space-around;
+    /* background: rgb(179, 190, 190); */
+    /* border: solid #cccccc 1px; */
+}
+
+    .resource-item-operation input,
+    label {
+        cursor: pointer;
+    }
+
+    .resource-child-operation > label:hover,
+    .resource-item-operation > label:hover {
+        color: peru;
+    }
+
+.triangle-right {
+    display: inline-block;
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-left: 8px solid rgb(151, 151, 151);
+    border-bottom: 5px solid transparent;
+}
+
+.triangle-bottom {
+    display: inline-block;
+    margin-left: 8px;
+    margin-right: 10px;
+    width: 0;
+    height: 0;
+    border-top: 8px solid rgb(151, 151, 151);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+}
+
+.resource-save {
+    text-align: center;
+}
+
+    .resource-save > input[type='button'] {
+        padding: 5px 20px;
+        border: solid 1px #00AF55;
+        background-color: #24BA63;
+        border-radius: 3px;
+        color: #ffffff;
+        cursor: pointer;
+    }
+
+        .resource-save > input[type='button']:hover {
+            background-color: #009E4C;
+        }
+
+/**模块**/
+
+.resource-module {
+    display: flex;
+    border: solid #eeeeee 1px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px #eeeeee;
+}
+
+.resource-module-list {
+    width: 150px;
+    min-width: 150px;
+    /* padding: 10px; */
+}
+
+    .resource-module-list > div {
+        border-bottom: solid #eeeeee 1px;
+        /* background-color: aqua; */
+        padding: 10px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+        .resource-module-list > div:hover {
+            background-color: #dddddd;
+        }
+
+.resource-module-select {
+    background-color: #dddddd;
+}
+
+.resource-module-content {
+    width: 100%;
+    border-left: solid #eeeeee 1px;
+}
+
+.resource-module-content {
+    padding: 10px;
+}
+
+.resource-module-head {
+    overflow: hidden;
+    display: flex;
+    height: 40px;
+    margin: 0px 0px 20px 0px;
+    /* border-bottom: solid #eeeeee 1px; */
+    background-color: #eeeeee;
+    border-radius: 5px;
+}
+
+.resource-module-name {
+    display: flex;
+    width: 60%;
+    height: 100%;
+    align-items: center;
+    padding: 0px 0px 0px 10px;
+}
+
+.resource-module-operation {
+    display: flex;
+    width: 40%;
+    height: 100%;
+    align-items: center;
+    justify-content: space-around;
+}
+
+    .resource-module-operation > label {
+        cursor: pointer;
+    }
+
+        .resource-module-operation > label:hover {
+            color: peru;
+        }

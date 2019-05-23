@@ -217,18 +217,18 @@ namespace AQ.Core.Repository
         //    return await dbConnection.GetListPagedAsync<T>(pageNumber, rowsPerPage, conditions, orderby, parameters);
         //}
 
-        ///// <summary>
-        ///// 插入一条记录并返回主键值(自增类型返回主键值，否则返回null)
-        ///// </summary>
-        ///// <param name="entity"></param>
-        ///// <returns></returns>
-        //public int? Insert(T entity)
-        //{
-        //    return dbConnection.Insert(entity);
-        //}
-
         /// <summary>
         /// 插入一条记录并返回主键值(自增类型返回主键值，否则返回null)
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public int? InsertByInt(T entity)
+        {
+            return dbConnection.Insert(entity);
+        }
+
+        /// <summary>
+        /// 插入一条记录并返回主键值(string类型主键值，否则返回null)
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -236,15 +236,27 @@ namespace AQ.Core.Repository
         {
             return dbConnection.Insert<Tkey, T>(entity);
         }
+
         /// <summary>
         /// 插入一条记录并返回主键值
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int?> InsertAsync(T entity)
+        public async Task<int?> InsertByIntAsync(T entity)
         {
             return await dbConnection.InsertAsync(entity);
         }
+
+        /// <summary>
+        /// 插入一条记录并返回主键值
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<Tkey> InsertAsync(T entity)
+        {
+            return await dbConnection.InsertAsync<Tkey, T>(entity);
+        }
+
         /// <summary>
         /// 满足条件的记录数量
         /// </summary>

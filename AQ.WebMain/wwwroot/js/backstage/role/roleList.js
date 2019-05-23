@@ -115,6 +115,8 @@
                     objData.Delete(obj.data.Id);
                     layer.close(index);
                 });
+            case 'menu':
+                window.parent.toTab({ url: '/Admin/Permission/Menu', text: '菜单授权' });
                 break;
             default:
                 break;

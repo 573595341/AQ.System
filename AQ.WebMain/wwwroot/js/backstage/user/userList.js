@@ -132,7 +132,7 @@
                 break;
             case 'role':
                 //alert(1);
-                window.parent.toTab({ url:'/Admin/Role/Index',text:'角色1' });
+                window.parent.toTab({ url: '/Admin/Role/Index', text: '角色1', refresh: true });
                 break;
             default:
                 break;
@@ -149,7 +149,7 @@
             case 'refresh':
                 objData.tableIns = table.reload(objData.tableIns.config.id);
                 break;
-           
+
             default:
                 break;
         }

@@ -24,15 +24,15 @@ namespace AQ.Test
         [Fact]
         public void TestCodeGenerate()
         {
-            var templatePath = @"F:\C#\Netcore\17kk\AQ.System\AQ.CodeTools\CodeTemplates";
-            var outputPath = @"F:\C#\Netcore\17kk\AQ.System";
-            //var templatePath = @"E:\netcore\17KK\AQ.System\AQ.CodeTools\CodeTemplates";
-            //var outputPath = @"E:\netcore\17KK\AQ.System";
+            //var templatePath = @"F:\C#\Netcore\17kk\AQ.System\AQ.CodeTools\CodeTemplates";
+            //var outputPath = @"F:\C#\Netcore\17kk\AQ.System";
+            var templatePath = @"E:\netcore\17KK\AQ.System\AQ.CodeTools\CodeTemplates";
+            var outputPath = @"E:\netcore\17KK\AQ.System";
             var services = new ServiceCollection();
             services.Configure<CodeGenerateOptionModel>(options =>
             {
-                options.DbConnString = "Data Source = .;Initial Catalog = AQsys;User Id = sa;Password = 123456;";
-                //options.DbConnString = @"Data Source = WANGFAN-PC\SQLEXPRESS;Initial Catalog = AQsys;User Id = sa;Password = 123456;";
+                //options.DbConnString = "Data Source = .;Initial Catalog = AQsys;User Id = sa;Password = 123456;";
+                options.DbConnString = @"Data Source = WANGFAN-PC\SQLEXPRESS;Initial Catalog = AQsys;User Id = sa;Password = 123456;";
                 options.DbType = "MSSQL";
                 options.ModelsConfig = new TemplateConfig()
                 {
@@ -80,7 +80,7 @@ namespace AQ.Test
             services.AddTransient<CodeGenerator>();
             var serviceProvider = services.BuildServiceProvider();
             var codeGenerator = serviceProvider.GetRequiredService<CodeGenerator>();
-            codeGenerator.GenerateCode(new List<string>() { "SysRole" }, EnumCodeTemplate.All, true);
+            codeGenerator.GenerateCode(new List<string>() { "SysPermission" }, EnumCodeTemplate.All, true);
             //codeGenerator.GenerateCode(EnumCodeTemplate.IRepository, true);
             //codeGenerator.GenerateCode(EnumCodeTemplate.Model, true);
             //codeGenerator.GenerateCode(EnumCodeTemplate.ViewModel, true);
