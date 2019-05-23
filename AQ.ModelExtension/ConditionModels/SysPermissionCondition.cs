@@ -8,7 +8,7 @@ namespace AQ.ModelExtension.ConditionModels
     {
         public string PerType { get; set; }
 
-        
+        public int MyProperty { get; set; }
 
     }
 }
