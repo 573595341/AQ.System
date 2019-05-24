@@ -80,68 +80,98 @@ namespace AQ.Repository.SqlServer
         /*[begin custom code bottom]*/
         #region 自定义代码区域,重新生成代码不会覆盖
 
-        public void Add(string roleId, string perType)
+        /// <summary>
+        /// 获取菜单权限信息
+        /// </summary>
+        /// <param name="moduleId">模块id</param>
+        /// <param name="roleId">角色id</param>
+        /// <returns></returns>
+        public List<MenuPermission> GetMenuData(string moduleId, string roleId)
         {
-
-
+            UpdatePermissionByMenu();
+            var data = dbConnection.Query<MenuPermission>(GetMenuDataSql().ToString(), new { PerType = "Menu", ModuleId = moduleId, RoleId = roleId });
+            return data != null ? data.ToList() : new List<MenuPermission>();
         }
 
         /// <summary>
         /// 获取菜单权限信息
         /// </summary>
-        /// <param name="roleId"></param>
+        /// <param name="moduleId">模块id</param>
+        /// <param name="roleId">角色id</param>
         /// <returns></returns>
-        public BaseResult<List<MenuPermission>> GetMenuData(string roleId)
+        public async Task<List<MenuPermission>> GetMenuDataAsync(string moduleId, string roleId)
         {
-            var result = new BaseResult<List<MenuPermission>>() { Data = new List<MenuPermission>() };
-            result.Data = dbConnection.Query<MenuPermission>(GetMenuDataSql().ToString(), new { PerType = "Menu", RoleId = roleId }).ToList();
-            result.ResultCode = CommonResults.Success.ResultCode;
-            result.ResultMsg = CommonResults.Success.ResultMsg;
-            return result;
-        }
-
-        /// <summary>
-        /// 获取菜单权限信息
-        /// </summary>
-        /// <param name="roleId"></param>
-        /// <returns></returns>
-        public async Task<BaseResult<List<MenuPermission>>> GetMenuDataAsync(string roleId)
-        {
-            var result = new BaseResult<List<MenuPermission>>() { Data = new List<MenuPermission>() };
-            var dataTask = await dbConnection.QueryAsync<MenuPermission>(GetMenuDataSql().ToString(), new { PerType = "Menu", RoleId = roleId });
-            result.Data = dataTask.ToList();
-            result.ResultCode = CommonResults.Success.ResultCode;
-            result.ResultMsg = CommonResults.Success.ResultMsg;
-            return result;
+            UpdatePermissionByMenu();
+            var dataTask = await dbConnection.QueryAsync<MenuPermission>(GetMenuDataSql().ToString(), new { PerType = "Menu", ModuleId = moduleId, RoleId = roleId });
+            return dataTask != null ? dataTask.ToList() : new List<MenuPermission>();
         }
 
         /// <summary>
         /// 获取模块权限信息
         /// </summary>
-        /// <param name="roleId"></param>
+        /// <param name="roleId">角色id</param>
         /// <returns></returns>
-        public BaseResult<List<ModulePermission>> GetModuleData(string roleId)
+        public List<ModulePermission> GetModuleData(string roleId)
         {
             var result = new BaseResult<List<ModulePermission>>() { Data = new List<ModulePermission>() };
-            result.Data = dbConnection.Query<ModulePermission>(GetMenuDataSql().ToString(), new { PerType = "Module", RoleId = roleId }).ToList();
-            result.ResultCode = CommonResults.Success.ResultCode;
-            result.ResultMsg = CommonResults.Success.ResultMsg;
-            return result;
+            UpdatePermissionByModule();
+            var data = dbConnection.Query<ModulePermission>(GetModuleDataSql().ToString(), new { PerType = "Module", RoleId = roleId });
+            return data != null ? data.ToList() : new List<ModulePermission>();
         }
 
         /// <summary>
         /// 获取模块权限信息
         /// </summary>
-        /// <param name="roleId"></param>
+        /// <param name="roleId">角色id</param>
         /// <returns></returns>
-        public async Task<BaseResult<List<ModulePermission>>> GetModuleDataAsync(string roleId)
+        public async Task<List<ModulePermission>> GetModuleDataAsync(string roleId)
         {
             var result = new BaseResult<List<ModulePermission>>() { Data = new List<ModulePermission>() };
+            UpdatePermissionByModule();
             var dataTask = await dbConnection.QueryAsync<ModulePermission>(GetMenuDataSql().ToString(), new { PerType = "Module", RoleId = roleId });
-            result.Data = dataTask.ToList();
-            result.ResultCode = CommonResults.Success.ResultCode;
-            result.ResultMsg = CommonResults.Success.ResultMsg;
-            return result;
+            return dataTask != null ? dataTask.ToList() : new List<ModulePermission>();
+        }
+
+        /// <summary>
+        /// 更新菜单权限资源
+        /// </summary>
+        /// <returns></returns>
+        private bool UpdatePermissionByMenu()
+        {
+            #region sql
+            StringBuilder sql = new StringBuilder();
+            sql.Append(@"
+--添加新增菜单
+INSERT INTO SysPermission(PerType,ResourceId) select 'Menu' PerType,Id ResourceId FROM SysMenu a 
+WHERE a.IsDelete = 0 and not exists(select 1 from SysPermission b where a.Id = b.ResourceId)
+--删除无效菜单
+DELETE FROM SysPermission 
+WHERE PerType = 'Menu' and not exists (select 1 from SysMenu b where SysPermission.ResourceId = b.Id and b.IsDelete = 0)
+");
+            #endregion
+            var r = dbConnection.Execute(sql.ToString());
+            return r >= 0;
+        }
+
+        /// <summary>
+        /// 更新模块权限资源
+        /// </summary>
+        /// <returns></returns>
+        private bool UpdatePermissionByModule()
+        {
+            #region sql
+            StringBuilder sql = new StringBuilder();
+            sql.Append(@"
+--添加新增菜单
+INSERT INTO SysPermission(PerType,ResourceId) select 'Module' PerType,Id ResourceId FROM SysModule a 
+WHERE a.IsDelete = 0 and not exists(select 1 from SysPermission b where a.Id = b.ResourceId)
+--删除无效菜单
+DELETE FROM SysPermission 
+WHERE PerType = 'Module' and not exists (select 1 from SysModule b where SysPermission.ResourceId = b.Id and b.IsDelete = 0)
+");
+            #endregion
+            var r = dbConnection.Execute(sql.ToString());
+            return r >= 0;
         }
 
         private StringBuilder GetMenuDataSql()
@@ -150,18 +180,11 @@ namespace AQ.Repository.SqlServer
             StringBuilder sql = new StringBuilder();
             sql.Append(@"
 select 
-b.Id, b.Name, b.ParentId, c.Operation value
-into #temp
+a.Id, b.Id [SId], b.Name, b.ParentId,ISNULL(c.Operation,0) value
 from SysPermission a
 inner join SysMenu b on b.Id = a.ResourceId
-inner join SysRolePermissionLink c on c.PerId = a.Id
-where a.PerType=@PerType and c.RoleId=@RoleId;
-select * from #temp
-union 
-select Id, Name, ParentId, 0 value 
-from SysMenu
-where not exists(select Id from #temp where SysMenu.Id=#temp.Id);
-drop table #temp;
+left join SysRolePermissionLink c on c.PerId = a.Id and c.RoleId=RoleId
+where a.PerType=@PerType and b.ModuleId = @ModuleId
 ");
             #endregion
             return sql;
@@ -173,32 +196,12 @@ drop table #temp;
             StringBuilder sql = new StringBuilder();
             sql.Append(@"
 select 
-b.Id, b.Name, b.ParentId, c.Operation value
-into #temp
+a.Id, b.Id [SId], b.Name, ISNULL(c.Operation,0) value
 from SysPermission a
 inner join SysModule b on b.Id = a.ResourceId
-inner join SysRolePermissionLink c on c.PerId = a.Id
-where a.PerType=@PerType and c.RoleId=@RoleId;
-select * from #temp
-union 
-select Id, Name, ParentId, 0 value 
-from SysModule
-where not exists(select Id from #temp where SysModule.Id=#temp.Id);
-drop table #temp;
+left join SysRolePermissionLink c on c.PerId = a.Id and c.RoleId=RoleId
+where a.PerType=@PerType
 ");
-            #endregion
-            return sql;
-        }
-
-        private StringBuilder AddSql()
-        {
-            #region sql
-            StringBuilder sql = new StringBuilder();
-            sql.Append(@"
-
-
-");
-
             #endregion
             return sql;
         }

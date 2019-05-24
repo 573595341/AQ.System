@@ -80,7 +80,7 @@ namespace AQ.Test
             services.AddTransient<CodeGenerator>();
             var serviceProvider = services.BuildServiceProvider();
             var codeGenerator = serviceProvider.GetRequiredService<CodeGenerator>();
-            codeGenerator.GenerateCode(new List<string>() { "SysPermission" }, EnumCodeTemplate.All, true);
+            codeGenerator.GenerateCode(new List<string>() { "SysRolePermissionLink" }, EnumCodeTemplate.All, true);
             //codeGenerator.GenerateCode(EnumCodeTemplate.IRepository, true);
             //codeGenerator.GenerateCode(EnumCodeTemplate.Model, true);
             //codeGenerator.GenerateCode(EnumCodeTemplate.ViewModel, true);

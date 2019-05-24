@@ -16,8 +16,4 @@
     <Compile Remove="Auto\AQsysModuleViewModel.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Permission\" />
-  </ItemGroup>
-
 </Project>

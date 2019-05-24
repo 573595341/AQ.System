@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AQ.Models
+namespace AQ.ViewModels
 {
-    public class ModulePermission
+    public class ModulePermissionViewModel
     {
-        /// <summary>权限id</summary>
-        public Int64 Id { get; set; }
         /// <summary>模块id</summary>
-        public string SId { get; set; }
+        public string Id { get; set; }
         /// <summary>模块名称</summary>
         public string Name { get; set; }
         /// <summary>权限值</summary>

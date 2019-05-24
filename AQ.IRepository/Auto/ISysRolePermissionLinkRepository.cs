@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace AQ.IRepository
 {
-    public interface ISysPermissionRepository : IBaseRepository<SysPermission, String>
+    public interface ISysRolePermissionLinkRepository : IBaseRepository<SysRolePermissionLink, Int64>
     {
         /*[begin custom code body]*/
         #region 自定义代码区域,重新生成代码不会覆盖
@@ -23,14 +23,14 @@ namespace AQ.IRepository
         /// </summary>
         /// <param name="keys"></param>
         /// <returns></returns>
-        int DeleteLogical(String[] keys);
+        int DeleteLogical(Int64[] keys);
 
         /// <summary>
         /// 逻辑删除
         /// </summary>
         /// <param name="keys"></param>
         /// <returns></returns>
-        Task<int> DeleteLogicalAsync(String[] keys);
+        Task<int> DeleteLogicalAsync(Int64[] keys);
 
         /// <summary>
         /// 更改状态
@@ -38,7 +38,7 @@ namespace AQ.IRepository
         /// <param name="status">状态</param>
         /// <param name="keys">主键</param>
         /// <returns></returns>
-        int UpdateStatus(int status, String[] keys);
+        int UpdateStatus(int status, Int64[] keys);
 
         /// <summary>
         /// 更改状态
@@ -46,40 +46,26 @@ namespace AQ.IRepository
         /// <param name="status">状态</param>
         /// <param name="keys">主键</param>
         /// <returns></returns>
-        Task<int> UpdateStatusAsync(int status, String[] keys);
+        Task<int> UpdateStatusAsync(int status, Int64[] keys);
 
         /*[begin custom code bottom]*/
         #region 自定义代码区域,重新生成代码不会覆盖
 
         /// <summary>
-        /// 获取菜单权限信息
+        /// 更新菜单权限
         /// </summary>
-        /// <param name="moduleId">模块id</param>
         /// <param name="roleId">角色id</param>
+        /// <param name="data">权限信息</param>
         /// <returns></returns>
-        List<MenuPermission> GetMenuData(string moduleId, string roleId);
+        bool UpdateMenu(string roleId, List<SysRolePermissionLink> data);
 
         /// <summary>
-        /// 获取菜单权限信息
-        /// </summary>
-        /// <param name="moduleId">模块id</param>
-        /// <param name="roleId">角色id</param>
-        /// <returns></returns>
-        Task<List<MenuPermission>> GetMenuDataAsync(string moduleId, string roleId);
-
-        /// <summary>
-        /// 获取模块权限信息
+        /// 更新菜单权限
         /// </summary>
         /// <param name="roleId">角色id</param>
+        /// <param name="data">权限信息</param>
         /// <returns></returns>
-        List<ModulePermission> GetModuleData(string roleId);
-
-        /// <summary>
-        /// 获取模块权限信息
-        /// </summary>
-        /// <param name="roleId">角色id</param>
-        /// <returns></returns>
-        Task<List<ModulePermission>> GetModuleDataAsync(string roleId);
+        Task<bool> UpdateMenuAsync(string roleId, List<SysRolePermissionLink> data);
 
         #endregion
         /*[end custom code bottom]*/

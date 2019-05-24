@@ -128,6 +128,42 @@ namespace AQ.WebMain.Profiles
                 ModifyUser = s.ModifyUser ?? string.Empty
             });
             #endregion
+
+            #region ModulePermission
+            CreateMap<ModulePermission, ModulePermissionViewModel>().ConvertUsing(s =>
+            new ModulePermissionViewModel()
+            {
+                Id = s.SId,
+                Name = s.Name,
+                Value = s.Value
+            });
+            CreateMap<ModulePermissionViewModel, ModulePermission>().ConvertUsing(s =>
+            new ModulePermission()
+            {
+                SId = s.Id,
+                Name = s.Name,
+                Value = s.Value
+            });
+            #endregion
+
+            #region MenuPermission
+            CreateMap<MenuPermission, MenuPermissionViewModel>().ConvertUsing(s =>
+            new MenuPermissionViewModel()
+            {
+                Id = s.SId,
+                Name = s.Name,
+                Value = s.Value,
+                ParentId = s.ParentId
+            });
+            CreateMap<MenuPermissionViewModel, MenuPermission>().ConvertUsing(s =>
+            new MenuPermission()
+            {
+                SId = s.Id,
+                Name = s.Name,
+                Value = s.Value,
+                ParentId = s.ParentId
+            });
+            #endregion
         }
     }
 }

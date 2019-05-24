@@ -18,6 +18,9 @@ namespace AQ.Services.Validation
                 RuleFor(m => m.PerType).NotEmpty().WithMessage("[PerType]参数错误");
             });
         }
-
     }
+
+   
+
+
 }

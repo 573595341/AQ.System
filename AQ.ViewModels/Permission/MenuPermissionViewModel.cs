@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AQ.Models
+namespace AQ.ViewModels
 {
-    public class MenuPermission
+    public class MenuPermissionViewModel
     {
-        /// <summary>权限id</summary>
-        public Int64 Id { get; set; }
         /// <summary>菜单id</summary>
-        public string SId { get; set; }
+        public string Id { get; set; }
         /// <summary>菜单名称</summary>
         public string Name { get; set; }
         /// <summary>上级菜单id</summary>

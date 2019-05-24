@@ -11,35 +11,35 @@
     <div class="resource-module">
         <div class="resource-module-list">
             <div v-for="(module,index) in moduleData" v-bind:class="index==currentIndex?'resource-module-select':''" v-on:click="moduleClick(index)"
-                 v-text="module.ModuleName"></div>
+                 v-text="module.Name"></div>
         </div>
         <div class="resource-module-content">
             <div class="resource-module-head">
                 <div class="resource-module-name">
-                    <label v-bind:for="'enabled-'+ moduleData[currentIndex].ModuleId">
-                        <input type="checkbox" v-bind:id="'enabled-'+ moduleData[currentIndex].ModuleId" v-model="enabledModule">启用该模块
+                    <label v-bind:for="'enabled-'+ moduleData[currentIndex].Id">
+                        <input type="checkbox" v-bind:id="'enabled-'+ moduleData[currentIndex].Id" v-model="enabledModule">启用该模块
                     </label>
                 </div>
                 <div class="resource-module-operation">
-                    <label v-bind:for="operation.view.key+'-'+ moduleData[currentIndex].ModuleId">
-                        <input type="checkbox" v-bind:id="operation.view.key+'-'+ moduleData[currentIndex].ModuleId" v-bind:checked="(moduleData[currentIndex].Value&operation.view.value) == operation.view.value"
+                    <label v-bind:for="operation.view.key+'-'+ moduleData[currentIndex].Id">
+                        <input type="checkbox" v-bind:id="operation.view.key+'-'+ moduleData[currentIndex].Id" v-bind:checked="(moduleData[currentIndex].Value&operation.view.value) == operation.view.value"
                                v-on:click="allClick(operation.view.value,$event)">查看(全选)
                     </label>
-                    <label v-bind:for="operation.add.key+'-'+ moduleData[currentIndex].ModuleId">
-                        <input type="checkbox" v-bind:id="operation.add.key+'-'+ moduleData[currentIndex].ModuleId" v-bind:checked="(moduleData[currentIndex].Value&operation.add.value) == operation.add.value"
+                    <label v-bind:for="operation.add.key+'-'+ moduleData[currentIndex].Id">
+                        <input type="checkbox" v-bind:id="operation.add.key+'-'+ moduleData[currentIndex].Id" v-bind:checked="(moduleData[currentIndex].Value&operation.add.value) == operation.add.value"
                                v-on:click="allClick(operation.add.value,$event)">添加(全选)
                     </label>
-                    <label v-bind:for="operation.edit.key+'-'+ moduleData[currentIndex].ModuleId">
-                        <input type="checkbox" v-bind:id="operation.edit.key+'-'+ moduleData[currentIndex].ModuleId" v-bind:checked="(moduleData[currentIndex].Value&operation.edit.value) == operation.edit.value"
+                    <label v-bind:for="operation.edit.key+'-'+ moduleData[currentIndex].Id">
+                        <input type="checkbox" v-bind:id="operation.edit.key+'-'+ moduleData[currentIndex].Id" v-bind:checked="(moduleData[currentIndex].Value&operation.edit.value) == operation.edit.value"
                                v-on:click="allClick(operation.edit.value,$event)">编辑(全选)
                     </label>
-                    <label v-bind:for="operation.delete.key+'-'+ moduleData[currentIndex].ModuleId">
-                        <input type="checkbox" v-bind:id="operation.delete.key+'-'+ moduleData[currentIndex].ModuleId" v-bind:checked="(moduleData[currentIndex].Value&operation.delete.value) == operation.delete.value"
+                    <label v-bind:for="operation.delete.key+'-'+ moduleData[currentIndex].Id">
+                        <input type="checkbox" v-bind:id="operation.delete.key+'-'+ moduleData[currentIndex].Id" v-bind:checked="(moduleData[currentIndex].Value&operation.delete.value) == operation.delete.value"
                                v-on:click="allClick(operation.delete.value,$event)">删除(全选)
                     </label>
                 </div>
             </div>
-            <component-menu v-for="(m,i) in getMenuList()" v-if="isRouterAlive" v-bind:key="m.MenuId" v-bind:menu="m" v-bind:menu-list="menuData"
+            <component-menu v-for="(m,i) in getMenuList()" v-if="isRouterAlive" v-bind:key="m.Id" v-bind:menu="m" v-bind:menu-list="menuData"
                             v-on:callback="refreshAllChecked" ref="menu"></component-menu>
             <div class="resource-save">
                 <input type="button" v-on:click="save" value="保存">
@@ -52,45 +52,45 @@
     <div class="resource-menu">
         <div class="resource-item">
             <div class="resource-item-name" v-on:click="toggleChild">
-                <span v-bind:class="triangleClass"></span>
-                <span v-text="menu.MenuName"></span>
+                <span v-if="dataSource.length>0" v-bind:class="triangleClass"></span>
+                <span v-text="menu.Name"></span>
             </div>
             <div class="resource-item-operation">
-                <label v-bind:for="operation.view.key+'-'+ menu.MenuId">
-                    <input type="checkbox" v-bind:id="operation.view.key+'-'+ menu.MenuId" v-bind:checked="(menu.Value&operation.view.value)==operation.view.value"
-                           v-on:click="menuClick(operation.view.value,$event)">查看(全选)
+                <label v-bind:for="operation.view.key+'-'+ menu.Id">
+                    <input type="checkbox" v-bind:id="operation.view.key+'-'+ menu.Id" v-bind:checked="(menu.Value&operation.view.value)==operation.view.value"
+                           v-on:click="menuClick(operation.view.value,$event)">查看
                 </label>
-                <label v-bind:for="operation.add.key+'-'+ menu.MenuId">
-                    <input type="checkbox" v-bind:id="operation.add.key+'-'+ menu.MenuId" v-bind:checked="(menu.Value&operation.add.value)==operation.add.value"
-                           v-on:click="menuClick(operation.add.value,$event)">添加(全选)
+                <label v-bind:for="operation.add.key+'-'+ menu.Id">
+                    <input type="checkbox" v-bind:id="operation.add.key+'-'+ menu.Id" v-bind:checked="(menu.Value&operation.add.value)==operation.add.value"
+                           v-on:click="menuClick(operation.add.value,$event)">添加
                 </label>
-                <label v-bind:for="operation.edit.key+'-'+ menu.MenuId">
-                    <input type="checkbox" v-bind:id="operation.edit.key+'-'+ menu.MenuId" v-bind:checked="(menu.Value&operation.edit.value)==operation.edit.value"
-                           v-on:click="menuClick(operation.edit.value,$event)">编辑(全选)
+                <label v-bind:for="operation.edit.key+'-'+ menu.Id">
+                    <input type="checkbox" v-bind:id="operation.edit.key+'-'+ menu.Id" v-bind:checked="(menu.Value&operation.edit.value)==operation.edit.value"
+                           v-on:click="menuClick(operation.edit.value,$event)">编辑
                 </label>
-                <label v-bind:for="operation.delete.key+'-'+ menu.MenuId">
-                    <input type="checkbox" v-bind:id="operation.delete.key+'-'+ menu.MenuId" v-bind:checked="(menu.Value&operation.delete.value)==operation.delete.value"
-                           v-on:click="menuClick(operation.delete.value,$event)">删除(全选)
+                <label v-bind:for="operation.delete.key+'-'+ menu.Id">
+                    <input type="checkbox" v-bind:id="operation.delete.key+'-'+ menu.Id" v-bind:checked="(menu.Value&operation.delete.value)==operation.delete.value"
+                           v-on:click="menuClick(operation.delete.value,$event)">删除
                 </label>
             </div>
         </div>
         <div v-bind:class="childClass" v-for="(item,index) in dataSource">
-            <div class="resource-child-name" v-text="item.MenuName"></div>
+            <div class="resource-child-name" v-text="item.Name"></div>
             <div class="resource-child-operation">
-                <label v-bind:for="operation.view.key+'-'+ item.MenuId">
-                    <input type="checkbox" v-bind:id="operation.view.key+'-'+ item.MenuId" v-bind:checked="(item.Value&operation.view.value)==operation.view.value"
+                <label v-bind:for="operation.view.key+'-'+ item.Id">
+                    <input type="checkbox" v-bind:id="operation.view.key+'-'+ item.Id" v-bind:checked="(item.Value&operation.view.value)==operation.view.value"
                            v-on:click="submenuClick(operation.view.value,index,$event)">查看
                 </label>
-                <label v-bind:for="operation.add.key+'-'+ item.MenuId">
-                    <input type="checkbox" v-bind:id="operation.add.key+'-'+ item.MenuId" v-bind:checked="(item.Value&operation.add.value)==operation.add.value"
+                <label v-bind:for="operation.add.key+'-'+ item.Id">
+                    <input type="checkbox" v-bind:id="operation.add.key+'-'+ item.Id" v-bind:checked="(item.Value&operation.add.value)==operation.add.value"
                            v-on:click="submenuClick(operation.add.value,index,$event)">添加
                 </label>
-                <label v-bind:for="operation.edit.key+'-'+ item.MenuId">
-                    <input type="checkbox" v-bind:id="operation.edit.key+'-'+ item.MenuId" v-bind:checked="(item.Value&operation.edit.value)==operation.edit.value"
+                <label v-bind:for="operation.edit.key+'-'+ item.Id">
+                    <input type="checkbox" v-bind:id="operation.edit.key+'-'+ item.Id" v-bind:checked="(item.Value&operation.edit.value)==operation.edit.value"
                            v-on:click="submenuClick(operation.edit.value,index,$event)">编辑
                 </label>
-                <label v-bind:for="operation.delete.key+'-'+ item.MenuId">
-                    <input type="checkbox" v-bind:id="operation.delete.key+'-'+ item.MenuId" v-bind:checked="(item.Value&operation.delete.value)==operation.delete.value"
+                <label v-bind:for="operation.delete.key+'-'+ item.Id">
+                    <input type="checkbox" v-bind:id="operation.delete.key+'-'+ item.Id" v-bind:checked="(item.Value&operation.delete.value)==operation.delete.value"
                            v-on:click="submenuClick(operation.delete.value,index,$event)">删除
                 </label>
             </div>

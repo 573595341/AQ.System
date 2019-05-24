@@ -42,9 +42,11 @@ Vue.component('component-menu', {
         /*展开收缩子菜单*/
         toggleChild: function () {
             var _this = this;
-            _this.childClass['resource-child-hide'] = !_this.childClass['resource-child-hide'];
-            _this.triangleClass['triangle-bottom'] = !_this.childClass['resource-child-hide'];
-            _this.triangleClass['triangle-right'] = _this.childClass['resource-child-hide'];
+            if (_this.dataSource.length > 0) {
+                _this.childClass['resource-child-hide'] = !_this.childClass['resource-child-hide'];
+                _this.triangleClass['triangle-bottom'] = !_this.childClass['resource-child-hide'];
+                _this.triangleClass['triangle-right'] = _this.childClass['resource-child-hide'];
+            }
         },
         /*获取子菜单集合*/
         getSubmenu: function (menuId) {
@@ -58,6 +60,10 @@ Vue.component('component-menu', {
                 }
             }
             _this.dataSource = r;
+            for (var key in _this.operation) {
+                console.log(_this.operation[key].value);
+                _this.refreshModule(_this.operation[key].value, false);
+            }
             return _this.dataSource;
         },
         /*菜单操作*/
@@ -137,10 +143,10 @@ Vue.component('component-menu', {
     },
     created: function () {
         var _this = this;
-        _this.dataSource = _this.getSubmenu(_this.menu.MenuId);
+        _this.dataSource = _this.getSubmenu(_this.menu.Id);
     }
 });
-layui.use([], function () {
+layui.use(['layer'], function () {
     var layer = parent.layer === undefined ? layui.layer : top.layer,
         $ = layui.jquery,
         laytpl = layui.laytpl;
@@ -148,60 +154,60 @@ layui.use([], function () {
     var app = new Vue({
         el: '#app',
         data: {
+            roleId: 'r0001',
             isRouterAlive: true,
             menuData: [
-                {
-                    MenuId: '1001',
-                    MenuName: '一级菜单1',
-                    ParentId: '',
-                    Value: 0
-                }, {
-                    MenuId: '1002',
-                    MenuName: '一级菜单2',
-                    ParentId: '',
-                    Value: 0
-                }, {
-                    MenuId: '2001',
-                    MenuName: '二级菜单1-1',
-                    ParentId: '1001',
-                    Value: 0
-                }, {
-                    MenuId: '2002',
-                    MenuName: '二级菜单1-2',
-                    ParentId: '1001',
-                    Value: 0
-                }
-                , {
-                    MenuId: '2003',
-                    MenuName: '二级菜单2-1',
-                    ParentId: '1002',
-                    Value: 0
-                }, {
-                    MenuId: '2004',
-                    MenuName: '二级菜单2-2',
-                    ParentId: '1002',
-                    Value: 0
-                },
+                //{
+                //    Id: '1001',
+                //    Name: '一级菜单1',
+                //    ParentId: '',
+                //    Value: 0
+                //}, {
+                //    Id: '1002',
+                //    Name: '一级菜单2',
+                //    ParentId: '',
+                //    Value: 0
+                //}, {
+                //    Id: '2001',
+                //    Name: '二级菜单1-1',
+                //    ParentId: '1001',
+                //    Value: 0
+                //}, {
+                //    Id: '2002',
+                //    Name: '二级菜单1-2',
+                //    ParentId: '1001',
+                //    Value: 0
+                //}
+                //, {
+                //    Id: '2003',
+                //    Name: '二级菜单2-1',
+                //    ParentId: '1002',
+                //    Value: 0
+                //}, {
+                //    Id: '2004',
+                //    Name: '二级菜单2-2',
+                //    ParentId: '1002',
+                //    Value: 0
+                //},
             ],
             moduleData: [
-                {
-                    ModuleId: 'm001',
-                    ModuleName: '模块一',
-                    Value: 0
-
-                }, {
-                    ModuleId: 'm002',
-                    ModuleName: '模块二',
-                    Value: 0
-                }, {
-                    ModuleId: 'm003',
-                    ModuleName: '模块三',
-                    Value: 0
-                }, {
-                    ModuleId: 'm004',
-                    ModuleName: '模块四',
-                    Value: 0
-                }
+                //{
+                //    Id: 'm001',
+                //    Name: '模块一',
+                //    Value: 0
+                //}, {
+                //    Id: 'm002',
+                //    Name: '模块二',
+                //    Value: 0
+                //}, {
+                //    Id: 'm003',
+                //    Name: '模块三',
+                //    Value: 0
+                //}, {
+                //    Id: 'm004',
+                //    Name: '模块四',
+                //    Value: 0
+                //}
             ],
             enabledModule: true,
             currentIndex: 0,
@@ -242,7 +248,7 @@ layui.use([], function () {
                 var r = [];
                 for (let index = 0; index < _this.menuData.length; index++) {
                     const element = _this.menuData[index];
-                    if (element.ParentId == '') {
+                    if (element.ParentId == '0' || element.ParentId == '') {
                         r.push(element);
                     }
                 }
@@ -253,8 +259,10 @@ layui.use([], function () {
             },
             moduleClick: function (index) {
                 var _this = this;
+                if (_this.currentIndex == index) { return; }
                 if (index < 0 || index > _this.moduleData.length - 1) { index = 0; }
                 _this.currentIndex = index;
+                _this.getMenuData(_this.moduleData[index].Id, _this.roleId);
                 _this.reload();
             },
             allClick: function (value, e) {
@@ -298,16 +306,71 @@ layui.use([], function () {
                 _this.menuData.forEach(d => {
                     console.log(JSON.stringify(d));
                 });
-                alert(1);
-            },
-            getData: function () {
+
                 $.ajax({
-                    url:'/Admin/'
+                    type: 'post',
+                    url: '/Admin/Permission/SaveMenu',
+                    data: { roleId: 'R0001', module: _this.moduleData[_this.currentIndex], menu: _this.menuData },
+                    dataType: "json",
+                    async: false,
+                    success: function (r) {
+                        if (r.ResultCode == 0) {
+                            layer.alert('操作成功', { icon: 6 });
+                        } else {
+                            layer.alert(r.ResultMsg, { icon: 5 });
+                        }
+                    },
+                    error: function (xmlHttpRequest, textStatus, errorThrown) {
+                        layer.alert('操作失败', { icon: 5 });
+                    }
+                });
+            },
+            getModuleData: function () {
+                var _this = this;
+                $.ajax({
+                    type: 'post',
+                    url: '/Admin/Permission/GetModuleData',
+                    data: { roleId: 'R0001' },
+                    dataType: "json",
+                    async: false,
+                    success: function (r) {
+                        //debugger;
+                        if (r.ResultCode == 0) {
+                            _this.moduleData = r.Data;
+                        } else {
+                            layer.alert(r.ResultMsg, { icon: 5 });
+                        }
+                    },
+                    error: function (xmlHttpRequest, textStatus, errorThrown) {
+                        layer.alert('操作失败', { icon: 5 });
+                    }
+                });
+            },
+            getMenuData: function (mId, rId) {
+                var _this = this;
+                $.ajax({
+                    type: 'post',
+                    url: '/Admin/Permission/GetMenuData',
+                    data: { moduleId: mId, roleId: rId },
+                    dataType: "json",
+                    success: function (r) {
+                        //debugger;
+                        if (r.ResultCode == 0) {
+                            _this.menuData = r.Data;
+                        } else {
+                            layer.alert(r.ResultMsg, { icon: 5 });
+                        }
+                    },
+                    error: function (xmlHttpRequest, textStatus, errorThrown) {
+                        layer.alert('操作失败', { icon: 5 });
+                    }
                 });
             }
         },
         created: function () {
-            // var _this = this;
+            var _this = this;
+            _this.getModuleData();
+            _this.getMenuData(_this.moduleData[0].Id, _this.roleId);
         }
     });
 

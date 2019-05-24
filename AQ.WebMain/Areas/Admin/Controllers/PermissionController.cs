@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AQ.IServices;
 using AQ.ModelExtension;
+using AQ.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AQ.WebMain.Areas.Admin.Controllers
@@ -11,12 +12,15 @@ namespace AQ.WebMain.Areas.Admin.Controllers
     [Area("Admin")]
     public class PermissionController : Controller
     {
-        ISysMenuService _menuService;
+        private readonly ISysPermissionService _sysPermissionService;
+        private readonly ISysRolePermissionLinkService _sysRolePermissionLinkService;
 
-        public PermissionController(ISysMenuService sysMenuService)
+        public PermissionController(
+            ISysPermissionService sysPermissionService,
+            ISysRolePermissionLinkService sysRolePermissionLinkService)
         {
-            _menuService = sysMenuService;
-
+            _sysPermissionService = sysPermissionService;
+            _sysRolePermissionLinkService = sysRolePermissionLinkService;
         }
 
         public IActionResult Index()
@@ -34,21 +38,24 @@ namespace AQ.WebMain.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetMenuData()
+        public IActionResult GetModuleData(string roleId)
         {
-            var result = new BaseResult<List<Object>>() { Data = new List<object>() };
-            var data = _menuService.GetListAll();
-            result.ResultCode = data.ResultCode;
-            result.ResultMsg = data.ResultMsg;
-            data.Data.ForEach(menu =>
-            {
-                result.Data.Add(new
-                {
-                    Id = menu.Id,
-                    Name = menu.Name,
-                    ParentId = menu.ParentId
-                });
-            });
+            var result = _sysPermissionService.GetModuleData(roleId);
+            return Json(result);
+        }
+
+        [HttpPost]
+        public IActionResult GetMenuData(string moduleId, string roleId)
+        {
+            var result = _sysPermissionService.GetMenuData(moduleId, roleId);
+            return Json(result);
+        }
+
+
+        [HttpPost]
+        public IActionResult SaveMenu(string roleId, ModulePermissionViewModel module, List<MenuPermissionViewModel> menu)
+        {
+            var result = _sysRolePermissionLinkService.UpdateMenu(roleId, module, menu);
             return Json(result);
         }
 
