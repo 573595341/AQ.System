@@ -46,7 +46,6 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Commons\Cores\" />
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
 

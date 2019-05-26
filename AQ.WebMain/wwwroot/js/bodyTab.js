@@ -34,13 +34,15 @@ layui.define(["element", "jquery"], function (exports) {
             }
             if (data[i].children != undefined && data[i].children.length > 0) {
                 ulHtml += '<a>';
-                if (data[i].icon != undefined && data[i].icon != '') {
-                    if (data[i].icon.indexOf("icon-") != -1) {
-                        ulHtml += '<i class="seraph ' + data[i].icon + '" data-icon="' + data[i].icon + '"></i>';
-                    } else {
-                        ulHtml += '<i class="layui-icon" data-icon="' + data[i].icon + '">' + data[i].icon + '</i>';
-                    }
-                }
+                var icon = data[i].icon || 'layui-icon-component';
+                ulHtml += '<i class="layui-icon ' + icon + '" data-icon="' + icon + '"></i>';
+                //if (data[i].icon != undefined && data[i].icon != '') {
+                //    if (data[i].icon.indexOf("icon-") != -1) {
+                //        ulHtml += '<i class="seraph ' + data[i].icon + '" data-icon="' + data[i].icon + '"></i>';
+                //    } else {
+                //        ulHtml += '<i class="layui-icon" data-icon="' + data[i].icon + '">' + data[i].icon + '</i>';
+                //    }
+                //}
                 ulHtml += '<cite>' + data[i].title + '</cite>';
                 ulHtml += '<span class="layui-nav-more"></span>';
                 ulHtml += '</a>';
@@ -51,13 +53,15 @@ layui.define(["element", "jquery"], function (exports) {
                     } else {
                         ulHtml += '<dd><a data-url="' + data[i].children[j].href + '">';
                     }
-                    if (data[i].children[j].icon != undefined && data[i].children[j].icon != '') {
-                        if (data[i].children[j].icon.indexOf("icon-") != -1) {
-                            ulHtml += '<i class="seraph ' + data[i].children[j].icon + '" data-icon="' + data[i].children[j].icon + '"></i>';
-                        } else {
-                            ulHtml += '<i class="layui-icon" data-icon="' + data[i].children[j].icon + '">' + data[i].children[j].icon + '</i>';
-                        }
-                    }
+                    var iconChildren = data[i].children[j].icon || 'layui-icon-component';
+                    ulHtml += '<i class="layui-icon ' + iconChildren + '" data-icon="' + iconChildren + '"></i>';
+                    //if (data[i].children[j].icon != undefined && data[i].children[j].icon != '') {
+                    //    if (data[i].children[j].icon.indexOf("icon-") != -1) {
+                    //        ulHtml += '<i class="seraph ' + data[i].children[j].icon + '" data-icon="' + data[i].children[j].icon + '"></i>';
+                    //    } else {
+                    //        ulHtml += '<i class="layui-icon" data-icon="' + data[i].children[j].icon + '">' + data[i].children[j].icon + '</i>';
+                    //    }
+                    //}
                     ulHtml += '<cite>' + data[i].children[j].title + '</cite></a></dd>';
                 }
                 ulHtml += "</dl>";
@@ -67,13 +71,15 @@ layui.define(["element", "jquery"], function (exports) {
                 } else {
                     ulHtml += '<a data-url="' + data[i].href + '">';
                 }
-                if (data[i].icon != undefined && data[i].icon != '') {
-                    if (data[i].icon.indexOf("icon-") != -1) {
-                        ulHtml += '<i class="seraph ' + data[i].icon + '" data-icon="' + data[i].icon + '"></i>';
-                    } else {
-                        ulHtml += '<i class="layui-icon" data-icon="' + data[i].icon + '">' + data[i].icon + '</i>';
-                    }
-                }
+                var icon = data[i].icon || 'layui-icon-component';
+                ulHtml += '<i class="layui-icon ' + icon + '" data-icon="' + icon + '"></i>';
+                //if (data[i].icon != undefined && data[i].icon != '') {
+                //    if (data[i].icon.indexOf("icon-") != -1) {
+                //        ulHtml += '<i class="seraph ' + data[i].icon + '" data-icon="' + data[i].icon + '"></i>';
+                //    } else {
+                //        ulHtml += '<i class="layui-icon" data-icon="' + data[i].icon + '">' + data[i].icon + '</i>';
+                //    }
+                //}
                 ulHtml += '<cite>' + data[i].title + '</cite></a>';
             }
             ulHtml += '</li>';
@@ -159,11 +165,13 @@ layui.define(["element", "jquery"], function (exports) {
         } else if (_this.attr("data-url") != undefined) {
             var title = '';
             if (_this.find("i.seraph,i.layui-icon").attr("data-icon") != undefined) {
-                if (_this.find("i.seraph").attr("data-icon") != undefined) {
-                    title += '<i class="seraph ' + _this.find("i.seraph").attr("data-icon") + '"></i>';
-                } else {
-                    title += '<i class="layui-icon">' + _this.find("i.layui-icon").attr("data-icon") + '</i>';
-                }
+                var icon = _this.find("i").attr("data-icon") || 'layui-icon-component';
+                title += '<i class="layui-icon ' + icon + '"></i>';
+                //if (_this.find("i.seraph").attr("data-icon") != undefined) {
+                //    title += '<i class="seraph layui-icon ' + _this.find("i.seraph").attr("data-icon") + '"></i>';
+                //} else {
+                //    title += '<i class="layui-icon">' + _this.find("i.layui-icon").attr("data-icon") + '</i>';
+                //}
             }
             //已打开的窗口中不存在
             if (that.hasTab(_this.find("cite").text()) == -1 && _this.siblings("dl.layui-nav-child").length == 0) {
@@ -182,6 +190,7 @@ layui.define(["element", "jquery"], function (exports) {
                 })
                 //当前窗口内容
                 var curmenu = {
+                    //"icon": _this.find("i.seraph").attr("data-icon") != undefined ? _this.find("i.seraph").attr("data-icon") : _this.find("i.layui-icon").attr("data-icon"),
                     "icon": _this.find("i.seraph").attr("data-icon") != undefined ? _this.find("i.seraph").attr("data-icon") : _this.find("i.layui-icon").attr("data-icon"),
                     "title": _this.find("cite").text(),
                     "href": _this.attr("data-url"),
@@ -213,7 +222,7 @@ layui.define(["element", "jquery"], function (exports) {
             return;
         }
         tabData.target = '';
-        tabData.ico = tabData.ico || '&#xe857;';//默认ico
+        tabData.ico = tabData.ico || 'layui-icon-component';//默认ico
         //tabData.refresh = false
 
         //debugger;
@@ -232,7 +241,7 @@ layui.define(["element", "jquery"], function (exports) {
             }
             var title = '';
             if (tabData.ico != undefined) {
-                title += '<i class="layui-icon">' + tabData.ico + '</i>';
+                title += '<i class="layui-icon ' + tabData.ico + '"></i>';
             }
             if ($(".layui-tab-title.top_tab li").length == openTabNum) {
                 layer.msg('只能同时打开' + openTabNum + '个选项卡哦。不然系统会卡的！');

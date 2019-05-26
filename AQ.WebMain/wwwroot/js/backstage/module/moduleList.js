@@ -67,7 +67,7 @@
     //分页列表
     objData.tableIns = table.render({
         elem: '#dataList',
-        url: 'LoadData',
+        url: 'DataBind',
         method: 'post',
         cellMinWidth: 60,
         page: true,
@@ -95,12 +95,13 @@
             , dataName: 'Data'          //规定数据列表的字段名称，默认：data
         },
         cols: [[
-            { type: 'checkbox', fixed: "left", width: 50 }
-            , { field: 'Id', title: 'ID', width: 50, align: "center" }
-            , { field: 'Name', title: '名称', minWidth: 50, align: "center" }
-            , { field: 'ModifyTime', title: '修改时间', minWidth: 80, align: "center" }
-            , { field: 'Status', title: '状态', minWidth: 20, align: 'center', templet: '#status' }
-            , { fixed: 'right', title: '操作', toolbar: '#operation', width: 150 }
+            { type: 'checkbox', fixed: "left" }
+            , { field: 'Id', title: 'ID', align: "center" }
+            , { field: 'Name', title: '名称', align: "center" }
+            , { field: 'Sort', title: '排序', align: 'center' }
+            , { field: 'ModifyTime', title: '修改时间', align: "center" }
+            , { field: 'Status', title: '状态', align: 'center', templet: '#status' }
+            , { fixed: 'right', title: '操作', toolbar: '#operation' }
         ]]
     });
 

@@ -37,7 +37,7 @@ namespace AQ.WebMain.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult LoadData(SysRoleCondition data)
+        public IActionResult DataBind(SysRoleCondition data)
         {
             var result = _roleService.GetListPaged(data);
             return Json(result);

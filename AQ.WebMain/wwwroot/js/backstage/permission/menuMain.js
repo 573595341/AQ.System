@@ -60,10 +60,6 @@ Vue.component('component-menu', {
                 }
             }
             _this.dataSource = r;
-            for (var key in _this.operation) {
-                console.log(_this.operation[key].value);
-                _this.refreshModule(_this.operation[key].value, false);
-            }
             return _this.dataSource;
         },
         /*菜单操作*/
@@ -154,8 +150,31 @@ layui.use(['layer'], function () {
     var app = new Vue({
         el: '#app',
         data: {
-            roleId: 'r0001',
+            roleId: getQuery('roleId'),
+            moduleClass: {
+                'resource-module-select': false
+            },
             isRouterAlive: true,
+            //enabledModule: true,
+            currentIndex: 0,
+            operation: {
+                view: {
+                    key: 'view',
+                    value: 1,
+                },
+                add: {
+                    key: 'add',
+                    value: 2,
+                },
+                edit: {
+                    key: 'edit',
+                    value: 4,
+                },
+                delete: {
+                    key: 'delete',
+                    value: 8,
+                }
+            },
             menuData: [
                 //{
                 //    Id: '1001',
@@ -209,34 +228,21 @@ layui.use(['layer'], function () {
                 //    Value: 0
                 //}
             ],
-            enabledModule: true,
-            currentIndex: 0,
-            moduleClass: {
-                'resource-module-select': false
-            },
-            operation: {
-                view: {
-                    key: 'view',
-                    value: 1
-                },
-                add: {
-                    key: 'add',
-                    value: 2
-                },
-                edit: {
-                    key: 'edit',
-                    value: 4
-                },
-                delete: {
-                    key: 'delete',
-                    value: 8
-                }
-            },
+            isFirstWatch: true,
+            isModify: false,
         },
         watch: {
-            enabledModule: function (newValue, oldValue) {
-                console.log(this.currentIndex + ' = ' + newValue + ' ' + oldValue)
-            }
+            menuData: {
+                deep: true,
+                handler: function (newValue, oldValue) {
+                    var _this = this;
+                    if (_this.isFirstWatch) {
+                        _this.isFirstWatch = false;
+                        return;
+                    }
+                    _this.isModify = true;
+                }
+            },
         },
         methods: {
             reload() {
@@ -254,16 +260,35 @@ layui.use(['layer'], function () {
                 }
                 return r;
             },
-            enabledModuleClick: function () {
-                this.enabledModule = !this.enabledModule;
-            },
             moduleClick: function (index) {
                 var _this = this;
                 if (_this.currentIndex == index) { return; }
+                if (_this.isModify) { //信息修改提示
+                    layer.confirm('保存当前修改?', { icon: 3, title: '提示' }, function (i) { //确认
+                        if (_this.saveData() === false) {
+                            layer.close(i);
+                            return;
+                        }
+                        _this.toModule(index);
+                        layer.close(i);
+                    }, function (i) { //取消
+                        _this.toModule(index);
+                        layer.close(i);
+                    });
+                } else {
+                    _this.toModule(index);
+                }
+            },
+            toModule: function (index) {
+                var _this = this;
                 if (index < 0 || index > _this.moduleData.length - 1) { index = 0; }
                 _this.currentIndex = index;
                 _this.getMenuData(_this.moduleData[index].Id, _this.roleId);
                 _this.reload();
+                for (var key in _this.operation) {
+                    _this.refreshAllChecked(_this.operation[key].value, false);
+                }
+                _this.resetFirstWatch();
             },
             allClick: function (value, e) {
                 var _this = this;
@@ -280,6 +305,7 @@ layui.use(['layer'], function () {
                     const element = _this.$refs.menu[i];
                     element.setAllCheck(value, e.target.checked);
                 }
+
             },
             refreshAllChecked: function (value, isChecked) {
                 var _this = this;
@@ -288,7 +314,11 @@ layui.use(['layer'], function () {
                         _this.moduleData[_this.currentIndex].Value = _this.moduleData[_this.currentIndex].Value | value;
                     }
                 } else {
-                    let isAll = false;
+                    //console.log('value:' + value);
+                    //_this.menuData.forEach(d => {
+                    //    console.log(JSON.stringify(d));
+                    //});
+                    var isAll = false;
                     for (let i = 0; i < _this.menuData.length; i++) {
                         const menu = _this.menuData[i];
                         if ((menu.Value & value) == value) {
@@ -296,25 +326,33 @@ layui.use(['layer'], function () {
                             break;
                         }
                     }
-                    if (!isAll && (_this.moduleData[_this.currentIndex].Value & value) == value) {
-                        _this.moduleData[_this.currentIndex].Value = _this.moduleData[_this.currentIndex].Value ^ value;
+                    if (isAll) {
+                        if ((_this.moduleData[_this.currentIndex].Value & value) != value) {
+                            _this.moduleData[_this.currentIndex].Value = _this.moduleData[_this.currentIndex].Value | value;
+                        }
+                    } else {
+                        if ((_this.moduleData[_this.currentIndex].Value & value) == value) {
+                            _this.moduleData[_this.currentIndex].Value = _this.moduleData[_this.currentIndex].Value ^ value;
+                        }
                     }
                 }
             },
-            save: function () {
+            saveData: function () {
                 var _this = this;
-                _this.menuData.forEach(d => {
-                    console.log(JSON.stringify(d));
-                });
-
+                //_this.menuData.forEach(d => {
+                //    console.log(JSON.stringify(d));
+                //});
+                var result = false;
                 $.ajax({
                     type: 'post',
                     url: '/Admin/Permission/SaveMenu',
-                    data: { roleId: 'R0001', module: _this.moduleData[_this.currentIndex], menu: _this.menuData },
+                    data: { roleId: _this.roleId, module: _this.moduleData[_this.currentIndex], menu: _this.menuData },
                     dataType: "json",
                     async: false,
                     success: function (r) {
                         if (r.ResultCode == 0) {
+                            result = true;
+                            _this.resetFirstWatch();
                             layer.alert('操作成功', { icon: 6 });
                         } else {
                             layer.alert(r.ResultMsg, { icon: 5 });
@@ -324,13 +362,14 @@ layui.use(['layer'], function () {
                         layer.alert('操作失败', { icon: 5 });
                     }
                 });
+                return result;
             },
             getModuleData: function () {
                 var _this = this;
                 $.ajax({
                     type: 'post',
                     url: '/Admin/Permission/GetModuleData',
-                    data: { roleId: 'R0001' },
+                    data: { roleId: _this.roleId },
                     dataType: "json",
                     async: false,
                     success: function (r) {
@@ -353,6 +392,7 @@ layui.use(['layer'], function () {
                     url: '/Admin/Permission/GetMenuData',
                     data: { moduleId: mId, roleId: rId },
                     dataType: "json",
+                    async: false,
                     success: function (r) {
                         //debugger;
                         if (r.ResultCode == 0) {
@@ -365,7 +405,11 @@ layui.use(['layer'], function () {
                         layer.alert('操作失败', { icon: 5 });
                     }
                 });
-            }
+            },
+            resetFirstWatch: function () {
+                this.isFirstWatch = true;
+                this.isModify = false;
+            },
         },
         created: function () {
             var _this = this;
@@ -374,4 +418,10 @@ layui.use(['layer'], function () {
         }
     });
 
+    //window.onload = function () {
+    //    debugger;
+    //    app.$watch('menuData', function () {
+    //        console.log('发生变化了');
+    //    }, { deep: true });  
+    //}
 })

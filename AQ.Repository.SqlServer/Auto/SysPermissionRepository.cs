@@ -128,7 +128,7 @@ namespace AQ.Repository.SqlServer
         {
             var result = new BaseResult<List<ModulePermission>>() { Data = new List<ModulePermission>() };
             UpdatePermissionByModule();
-            var dataTask = await dbConnection.QueryAsync<ModulePermission>(GetMenuDataSql().ToString(), new { PerType = "Module", RoleId = roleId });
+            var dataTask = await dbConnection.QueryAsync<ModulePermission>(GetModuleDataSql().ToString(), new { PerType = "Module", RoleId = roleId });
             return dataTask != null ? dataTask.ToList() : new List<ModulePermission>();
         }
 
@@ -182,9 +182,10 @@ WHERE PerType = 'Module' and not exists (select 1 from SysModule b where SysPerm
 select 
 a.Id, b.Id [SId], b.Name, b.ParentId,ISNULL(c.Operation,0) value
 from SysPermission a
-inner join SysMenu b on b.Id = a.ResourceId
-left join SysRolePermissionLink c on c.PerId = a.Id and c.RoleId=RoleId
+inner join SysMenu b on b.Id = a.ResourceId and b.IsDelete = 0
+left join SysRolePermissionLink c on c.PerId = a.Id and c.RoleId=@RoleId
 where a.PerType=@PerType and b.ModuleId = @ModuleId
+order by b.Sort
 ");
             #endregion
             return sql;
@@ -198,9 +199,10 @@ where a.PerType=@PerType and b.ModuleId = @ModuleId
 select 
 a.Id, b.Id [SId], b.Name, ISNULL(c.Operation,0) value
 from SysPermission a
-inner join SysModule b on b.Id = a.ResourceId
-left join SysRolePermissionLink c on c.PerId = a.Id and c.RoleId=RoleId
+inner join SysModule b on b.Id = a.ResourceId and b.IsDelete = 0
+left join SysRolePermissionLink c on c.PerId = a.Id and c.RoleId=@RoleId
 where a.PerType=@PerType
+order by b.Sort
 ");
             #endregion
             return sql;

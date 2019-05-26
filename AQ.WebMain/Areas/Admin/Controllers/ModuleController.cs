@@ -34,7 +34,7 @@ namespace AQ.WebMain.Controllers.Admin
         }
 
         [HttpPost]
-        public ActionResult LoadData(SysModuleCondition data)
+        public ActionResult DataBind(SysModuleCondition data)
         {
             var result = _moduleService.GetListPaged(data);
             return Json(result);

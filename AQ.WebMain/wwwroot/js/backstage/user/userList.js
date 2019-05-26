@@ -67,9 +67,9 @@
     //分页列表
     objData.tableIns = table.render({
         elem: '#dataList',
-        url: 'LoadData',
+        url: 'DataBind',
         method: 'post',
-        cellMinWidth: 60,
+        //cellMinWidth: 60,
         page: true,
         //height: "full-125",
         limits: [10, 15, 20, 25],
@@ -95,25 +95,25 @@
             , dataName: 'Data'          //规定数据列表的字段名称，默认：data
         },
         cols: [[
-            { type: 'checkbox', fixed: "left", width: 50 }
-            , { field: 'Id', title: 'ID', minWidth: 50, align: "center" }
-            , { field: 'Account', title: '账号', minWidth: 20, align: "center" }
-            , { field: 'CName', title: '姓名', minWidth: 20, align: "center" }
-            , { field: 'NickName', title: '昵称', minWidth: 50, align: "center" }
-            , { field: 'Mobile', title: '手机号码', minWidth: 20, align: "center" }
-            , { field: 'JobCode', title: '工号', minWidth: 20, align: "center" }
+            { type: 'checkbox', fixed: "left" }
+            , { field: 'Id', title: 'ID', align: "center" }
+            , { field: 'Account', title: '账号', align: "center" }
+            , { field: 'CName', title: '姓名', align: "center" }
+            , { field: 'NickName', title: '昵称', align: "center" }
+            , { field: 'Mobile', title: '手机号码', align: "center" }
+            , { field: 'JobCode', title: '工号', align: "center" }
             , {
-                field: 'Sex', title: '性别', minWidth: 20, align: "center", templet: function (d) {
+                field: 'Sex', title: '性别', align: "center", templet: function (d) {
                     return d.Sex > 0 ? d.Sex == 1 ? '男' : '女' : '暂无';
                 }
             }
             , {
-                field: 'Birthday', title: '生日', minWidth: 20, align: 'center', templet: function (d) {
+                field: 'Birthday', title: '生日', align: 'center', templet: function (d) {
                     return d.Birthday ? d.Birthday.substring(0, 10) : '';
                 }
             }
-            , { field: 'Status', title: '状态', minWidth: 20, align: 'center', templet: '#status' }
-            , { fixed: 'right', title: '操作', toolbar: '#operation', width: 200 }
+            , { field: 'Status', title: '状态', align: 'center', templet: '#status' }
+            , { fixed: 'right', title: '操作', minWidth: 200,toolbar: '#operation' }
         ]]
     });
 

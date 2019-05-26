@@ -54,18 +54,20 @@ namespace AQ.IRepository
         /// <summary>
         /// 更新菜单权限
         /// </summary>
+        /// <param name="moduleId">模块id</param>
         /// <param name="roleId">角色id</param>
         /// <param name="data">权限信息</param>
         /// <returns></returns>
-        bool UpdateMenu(string roleId, List<SysRolePermissionLink> data);
+        bool UpdateMenu(string moduleId, string roleId, List<SysRolePermissionLink> data);
 
         /// <summary>
         /// 更新菜单权限
         /// </summary>
+        /// <param name="moduleId">模块id</param>
         /// <param name="roleId">角色id</param>
         /// <param name="data">权限信息</param>
         /// <returns></returns>
-        Task<bool> UpdateMenuAsync(string roleId, List<SysRolePermissionLink> data);
+        Task<bool> UpdateMenuAsync(string moduleId, string roleId, List<SysRolePermissionLink> data);
 
         #endregion
         /*[end custom code bottom]*/

@@ -83,16 +83,17 @@ namespace AQ.Repository.SqlServer
         /// <summary>
         /// 更新菜单权限
         /// </summary>
+        /// <param name="moduleId">模块id</param>
         /// <param name="roleId">角色id</param>
         /// <param name="data">权限信息</param>
         /// <returns></returns>
-        public bool UpdateMenu(string roleId, List<SysRolePermissionLink> data)
+        public bool UpdateMenu(string moduleId, string roleId, List<SysRolePermissionLink> data)
         {
             dbConnection.Open();
             var tran = dbConnection.BeginTransaction();
             try
             {
-                dbConnection.Execute(DeleteMenuSql().ToString(), new { PerType = new List<string>() { "Menu", "Module" }, RoleId = roleId }, tran);
+                dbConnection.Execute(DeleteMenuSql().ToString(), new { ModuleId = moduleId, RoleId = roleId }, tran);
                 dbConnection.Execute(AddSql().ToString(), data, tran);
                 tran.Commit();
                 return true;
@@ -112,15 +113,16 @@ namespace AQ.Repository.SqlServer
         /// <summary>
         /// 更新菜单权限
         /// </summary>
+        /// <param name="moduleId">模块id</param>
         /// <param name="roleId">角色id</param>
         /// <param name="data">权限信息</param>
         /// <returns></returns>
-        public async Task<bool> UpdateMenuAsync(string roleId, List<SysRolePermissionLink> data)
+        public async Task<bool> UpdateMenuAsync(string moduleId, string roleId, List<SysRolePermissionLink> data)
         {
             var tran = dbConnection.BeginTransaction();
             try
             {
-                await dbConnection.ExecuteAsync(DeleteMenuSql().ToString(), new { PerType = new List<string>() { "Menu", "Module" }, RoleId = roleId }, tran);
+                await dbConnection.ExecuteAsync(DeleteMenuSql().ToString(), new { ModuleId = moduleId, RoleId = roleId }, tran);
                 await dbConnection.ExecuteAsync(AddSql().ToString(), data, tran);
                 tran.Commit();
                 return true;
@@ -141,13 +143,15 @@ namespace AQ.Repository.SqlServer
             #region sql
             StringBuilder sql = new StringBuilder();
             sql.Append(@"
-delete from SysRolePermissionLink 
-where Id in (
-	select a.id
-	from SysRolePermissionLink a
-	inner join SysPermission b on a.PerId = b.Id
-	where b.PerType in @PerType and RoleId = @RoleId
-)
+delete a from SysRolePermissionLink a
+inner join SysPermission b on a.PerId = b.Id
+inner join SysModule c on c.Id = b.ResourceId
+where b.PerType = 'Module' and RoleId = @RoleId and c.Id = @ModuleId ;
+
+delete a from SysRolePermissionLink a
+inner join SysPermission b on a.PerId = b.Id
+inner join SysMenu c on c.Id = b.ResourceId
+where b.PerType = 'Menu' and RoleId = @RoleId and c.ModuleId = @ModuleId;
 ");
             #endregion
             return sql;

@@ -15,10 +15,10 @@
         </div>
         <div class="resource-module-content">
             <div class="resource-module-head">
-                <div class="resource-module-name">
-                    <label v-bind:for="'enabled-'+ moduleData[currentIndex].Id">
-                        <input type="checkbox" v-bind:id="'enabled-'+ moduleData[currentIndex].Id" v-model="enabledModule">启用该模块
-                    </label>
+                <div class="resource-module-name" v-text="'【'+moduleData[currentIndex].Name+'】'">
+                    @*<label v-bind:for="'enabled-'+ moduleData[currentIndex].Id">
+                            <input type="checkbox" v-bind:id="'enabled-'+ moduleData[currentIndex].Id" v-model="enabledModule">启用该模块
+                        </label>*@
                 </div>
                 <div class="resource-module-operation">
                     <label v-bind:for="operation.view.key+'-'+ moduleData[currentIndex].Id">
@@ -42,7 +42,7 @@
             <component-menu v-for="(m,i) in getMenuList()" v-if="isRouterAlive" v-bind:key="m.Id" v-bind:menu="m" v-bind:menu-list="menuData"
                             v-on:callback="refreshAllChecked" ref="menu"></component-menu>
             <div class="resource-save">
-                <input type="button" v-on:click="save" value="保存">
+                <input type="button" v-on:click="saveData" value="保存">
             </div>
         </div>
     </div>
@@ -100,7 +100,8 @@
 
 @section Scripts{
     @*<script src="~/js/vue/vue.min.js"></script>*@
-    <script src="~/js/vue/vue.js"></script>
-    <script src="~/layui/layui.js"></script>
-    <script src="~/js/backstage/permission/menuMain.js"></script>
+    <script src="~/js/commons/util.js?v=@Html.GetVersion()"></script>
+    <script src="~/js/vue/vue.js?v=@Html.GetVersion()"></script>
+    <script src="~/layui/layui.js?v=@Html.GetVersion()"></script>
+    <script src="~/js/backstage/permission/menuMain.js?v=@Html.GetVersion()"></script>
 }

@@ -1,4 +1,4 @@
-﻿layui.use(['upload', 'form'], function () {
+﻿layui.use(['upload', 'element', 'form'], function () {
     var layer = parent.layer === undefined ? layui.layer : top.layer
         , $ = layui.jquery
         , form = layui.form
@@ -46,7 +46,7 @@
             return {
                 Id: $('#id').val()
                 , Name: field.Name
-                //, Ico: field.Name
+                , Ico: field.Ico
                 , Sort: field.Sort
                 , Status: field.Status == "1" ? 1 : 0
             };
@@ -65,7 +65,7 @@
                 },
                 success: function (r) {
                     if (r.ResultCode == 0) {
-                        _this.LoadData(r.Data);
+                        _this.DataBind(r.Data);
                     } else {
                         layer.alert(r.ResultMsg, { icon: 5 });
                     }
@@ -75,11 +75,12 @@
                 }
             });
         }
-        , LoadData: function (resultData) {
+        , DataBind: function (resultData) {
             if (!resultData) { return; }
             form.val("formData", {
                 Name: resultData.Name
                 , Sort: resultData.Sort
+                , Ico: resultData.Ico
                 , Status: resultData.Status
             });
         }

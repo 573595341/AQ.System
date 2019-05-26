@@ -4,77 +4,85 @@
 }
 
 @Html.AntiForgeryToken()
-<input type="hidden" id="id" value="@ViewBag.Id" />
 
-<div class="layui-form layui-form-pane layui-main" lay-filter="formData">
-    <div class="layui-form-item">
-        <label class="layui-form-label">账号</label>
-        <div class="layui-input-block">
-            <input type="text" class="layui-input" autocomplete="off" name="Account" lay-filter="Account" style="width:200px" lay-verify="required" />
+<div class="layui-main">
+    <input type="hidden" id="id" value="@ViewBag.Id" />
+    <span class="layui-breadcrumb">
+        <a href="javascript:history.go(-1)">用户管理</a>
+        <a href="javascript:void(0)">用户信息</a>
+    </span>
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>用户信息</legend>
+    </fieldset>
+    <div class="layui-form layui-form-pane" lay-filter="formData">
+        <div class="layui-form-item">
+            <label class="layui-form-label">账号</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" autocomplete="off" name="Account" lay-filter="Account" style="width:200px" lay-verify="required" />
+            </div>
         </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">密码</label>
-        <div class="layui-input-block">
-            <input type="password" class="layui-input" autocomplete="off" name="Pwd" lay-filter="Pwd" style="width:200px" lay-verify="required" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-block">
+                <input type="password" class="layui-input" autocomplete="off" name="Pwd" lay-filter="Pwd" style="width:200px" lay-verify="required" />
+            </div>
         </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">姓名</label>
-        <div class="layui-input-block">
-            <input type="text" class="layui-input" autocomplete="off" name="CName" lay-filter="CName" style="width:200px" lay-verify="required" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" autocomplete="off" name="CName" lay-filter="CName" style="width:200px" lay-verify="required" />
+            </div>
         </div>
-    </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">手机</label>
-        <div class="layui-input-block">
-            <input type="text" class="layui-input" autocomplete="off" name="Mobile" lay-filter="Mobile" style="width:200px" lay-verify="required" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">手机</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" autocomplete="off" name="Mobile" lay-filter="Mobile" style="width:200px" lay-verify="required" />
+            </div>
         </div>
-    </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">昵称</label>
-        <div class="layui-input-block">
-            <input type="text" class="layui-input" autocomplete="off" name="NickName" lay-filter="NickName" style="width:200px" lay-verify="required" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">昵称</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" autocomplete="off" name="NickName" lay-filter="NickName" style="width:200px" lay-verify="required" />
+            </div>
         </div>
-    </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">工号</label>
-        <div class="layui-input-block">
-            <input type="text" class="layui-input" autocomplete="off" name="JobCode" lay-filter="JobCode" style="width:200px" lay-verify="required" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">工号</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" autocomplete="off" name="JobCode" lay-filter="JobCode" style="width:200px" lay-verify="required" />
+            </div>
         </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">性别</label>
-        <div class="layui-input-block">
-            <input type="radio" title="男" value="1" name="Sex" />
-            <input type="radio" title="女" value="2" name="Sex" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <input type="radio" title="男" value="1" name="Sex" />
+                <input type="radio" title="女" value="2" name="Sex" />
+            </div>
         </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">生日</label>
-        <div class="layui-input-block">
-            <input type="text" class="layui-input" readonly autocomplete="off" id="Birthday" name="Birthday" lay-filter="Birthday" style="width:200px" />
-            @*<input type="text" class="layui-input" autocomplete="off" id="Birthday" name="Birthday" lay-filter="Birthday" style="width:200px" />*@
+        <div class="layui-form-item">
+            <label class="layui-form-label">生日</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" readonly autocomplete="off" id="Birthday" name="Birthday" lay-filter="Birthday" style="width:200px" />
+                @*<input type="text" class="layui-input" autocomplete="off" id="Birthday" name="Birthday" lay-filter="Birthday" style="width:200px" />*@
+            </div>
         </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">状态</label>
-        <div class="layui-input-block">
-            <input type="checkbox" lay-text="启用|停用" name="Status" title="启用" lay-filter="Status" lay-skin="primary" value="1" checked />
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <input type="checkbox" lay-text="启用|停用" name="Status" title="启用" lay-filter="Status" lay-skin="primary" value="1" checked />
+            </div>
         </div>
-    </div>
-    <div class="layui-form-item">
-        <div class="layui-input-block layui-btn-container">
-            <button class="layui-btn" lay-submit="" lay-filter="save">保存</button>
-            <button class="layui-btn layui-btn-danger back" lay-filter="back" onclick="javascript:history.back(-1);">返回</button>
+        <div class="layui-form-item">
+            <div class="layui-input-block layui-btn-container">
+                <button class="layui-btn" lay-submit="" lay-filter="save">保存</button>
+                <button class="layui-btn layui-btn-danger back" lay-filter="back" onclick="javascript:history.back(-1);">返回</button>
+            </div>
         </div>
     </div>
 </div>
-
 @section Scripts{
-    <script src="~/layui/layui.js?v=2"></script>
-    <script src="~/js/backstage/user/userDetails.js"></script>
+    <script src="~/layui/layui.js?v=@Html.GetVersion()"></script>
+    <script src="~/js/backstage/user/userDetails.js?v=@Html.GetVersion()"></script>
 }

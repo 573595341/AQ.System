@@ -57,7 +57,7 @@ namespace AQ.Services
                                         id = menu.Id,
                                         title = menu.Name,
                                         href = menu.PageUrl,
-                                        icon = string.IsNullOrEmpty(menu.Ico)? "&#xe857;": menu.Ico,
+                                        icon = menu.Ico ?? "",
                                         parentId = menu.ParentId,
                                         moduleId = module.Id,
                                         sort = menu.Sort,
@@ -125,7 +125,8 @@ namespace AQ.Services
                         {
                             id = itemModule.Id,
                             name = itemModule.Name,
-                            sort = itemModule.Sort
+                            sort = itemModule.Sort,
+                            icon = itemModule.Ico
                         };
                         result.Add(module);
                     }

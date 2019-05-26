@@ -4,6 +4,8 @@
 }
 
 @Html.AntiForgeryToken()
+
+
 <div id="dataList" lay-filter="dataList"></div>
 
 <script type="text/html" id="toolbar" lay-filter="tools">
@@ -26,6 +28,6 @@
 </script>
 
 @section Scripts{
-    <script src="~/layui/layui.js"></script>
-    <script src="~/js/backstage/role/roleList.js?v=1"></script>
+    <script src="~/layui/layui.js?v=@Html.GetVersion()"></script>
+    <script src="~/js/backstage/role/roleList.js?v=@Html.GetVersion()"></script>
 }

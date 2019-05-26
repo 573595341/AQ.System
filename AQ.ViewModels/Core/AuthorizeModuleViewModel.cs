@@ -22,8 +22,7 @@ namespace AQ.ViewModels
 
         public AuthorizeModuleViewModel()
         {
-            id = name = "";
-            icon = "&#xe857;";
+            id = name = icon = "";
             menuData = new List<AuthorizeMenuViewModel>();
         }
     }
@@ -56,8 +55,7 @@ namespace AQ.ViewModels
 
         public AuthorizeMenuViewModel()
         {
-            href = title = "";
-            icon = "&#xe857;";
+            href = title = icon = "";
             children = new List<AuthorizeMenuViewModel>();
         }
     }

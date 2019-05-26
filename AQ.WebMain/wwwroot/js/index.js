@@ -89,11 +89,12 @@ layui.use(['bodyTab', 'form', 'element', 'layer', 'jquery'], function () {
         var moduleHtml_pc = '';
         var moduleHtml_mobile = '';
         $.each(getMenuData(), function (i, v) {
+            var icon = v.icon || 'layui-icon-template-1';
             moduleHtml_pc += '\
             <li class="layui-nav-item" data-menu="' + v.id + '" pc >\
-                <a href = "javascript:void(0);" ><i class="layui-icon" data-icon="&#xe857;">&#xe857;</i><cite>' + v.name + '</cite></a >\
+                <a href = "javascript:void(0);" ><i class="layui-icon '+ icon + '" data-icon="' + icon + '"></i><cite>' + v.name + '</cite></a >\
             </li> ';
-            moduleHtml_mobile += '\<dd data-menu="' + v.id + '"><a href="javascript:void(0);"><i class="layui-icon" data-icon="&#xe857;">&#xe857;</i><cite>' + v.name + '</cite></a></dd>';
+            moduleHtml_mobile += '\<dd data-menu="' + v.id + '"><a href="javascript:void(0);"><i class="layui-icon ' + icon + '" data-icon="' + icon + '"></i><cite>' + v.name + '</cite></a></dd>';
         })
         $('.topLevelMenus').eq(0).html(moduleHtml_pc);
         $('.mobileTopLevelMenus .layui-nav-child').eq(0).html(moduleHtml_mobile);

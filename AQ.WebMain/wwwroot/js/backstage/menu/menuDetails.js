@@ -1,8 +1,7 @@
-﻿layui.use(['upload', 'form'], function () {
+﻿layui.use(['element', 'form'], function () {
     var layer = parent.layer === undefined ? layui.layer : top.layer
         , $ = layui.jquery
         , form = layui.form
-        , upload = layui.upload
         , isModify = $.trim($('#id').val()) ? true : false;
 
     var objData = {
@@ -99,7 +98,6 @@
             });
         }
         , GetParas: function (field) {
-            debugger;
             if (!field) { return null; }
             return {
                 Id: $('#id').val()
@@ -108,6 +106,7 @@
                 , ModuleId: field.ModuleId
                 , PageUrl: field.PageUrl
                 , Sort: field.Sort
+                , Ico: field.Ico
                 , Status: field.Status == "1" ? 1 : 0
             };
         }
@@ -125,7 +124,7 @@
                 },
                 success: function (r) {
                     if (r.ResultCode == 0) {
-                        _this.LoadData(r.Data);
+                        _this.DataBind(r.Data);
                     } else {
                         layer.alert(r.ResultMsg, { icon: 5 });
                     }
@@ -135,7 +134,7 @@
                 }
             });
         }
-        , LoadData: function (resultData) {
+        , DataBind: function (resultData) {
             if (!resultData) { return; }
             form.val("formData", {
                 Name: resultData.Name
@@ -143,6 +142,7 @@
                 , ModuleId: resultData.ModuleId
                 , PageUrl: resultData.PageUrl
                 , Sort: resultData.Sort
+                , Ico: resultData.Ico
                 , Status: resultData.Status
             });
         }

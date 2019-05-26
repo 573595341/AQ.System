@@ -1,4 +1,4 @@
-﻿layui.use(['laydate', 'form'], function () {
+﻿layui.use(['laydate', 'element','form'], function () {
     var layer = parent.layer === undefined ? layui.layer : top.layer
         , $ = layui.jquery
         , form = layui.form
@@ -73,7 +73,7 @@
                 },
                 success: function (r) {
                     if (r.ResultCode == 0) {
-                        _this.LoadData(r.Data);
+                        _this.DataBind(r.Data);
                     } else {
                         layer.alert(r.ResultMsg, { icon: 5 });
                     }
@@ -83,7 +83,7 @@
                 }
             });
         }
-        , LoadData: function (resultData) {
+        , DataBind: function (resultData) {
             if (!resultData) { return; }
             form.val("formData", {
                 Account: resultData.Account

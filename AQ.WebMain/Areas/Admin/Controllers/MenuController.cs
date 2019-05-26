@@ -41,7 +41,7 @@ namespace AQ.WebMain.Controllers.Admin
         // POST: Menu/Create
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public ActionResult LoadData(SysMenuCondition data)
+        public ActionResult DataBind(SysMenuCondition data)
         {
             var result = _menuService.GetListPaged(data);
             return Json(result);
@@ -58,6 +58,10 @@ namespace AQ.WebMain.Controllers.Admin
         public ActionResult MenuData()
         {
             var result = _menuService.GetListAll();
+            if (result.Data != null && result.Data.Count > 0)
+            {
+                result.Data = result.Data.Where(m => m.ParentId == "0" && string.IsNullOrEmpty(m.PageUrl)).ToList();
+            }
             return Json(result);
         }
 

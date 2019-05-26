@@ -75,7 +75,7 @@ namespace AQ.Services
                 #region 验证需要添加权限的模块
                 var moduleList = _sysPermissionRepository.GetModuleData(roleId);
                 var module = moduleList.FirstOrDefault(m => m.SId == moduleData.Id);
-                if (module != null)
+                if (module != null && module.Value > 0)
                 {
                     saveData.Add(new SysRolePermissionLink()
                     {
@@ -103,10 +103,7 @@ namespace AQ.Services
                 }
                 #endregion
 
-                if (saveData.Count() > 0)
-                {
-                    _repository.UpdateMenu(roleId, saveData);
-                }
+                _repository.UpdateMenu(moduleData.Id, roleId, saveData);
                 result = CommonResults.Success;
             }
             catch (Exception ex)
@@ -176,7 +173,7 @@ namespace AQ.Services
 
                 if (saveData.Count() > 0)
                 {
-                    await _repository.UpdateMenuAsync(roleId, saveData);
+                    await _repository.UpdateMenuAsync(moduleData.Id, roleId, saveData);
                 }
                 result = CommonResults.Success;
             }
