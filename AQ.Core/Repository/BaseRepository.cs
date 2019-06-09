@@ -21,7 +21,7 @@ namespace AQ.Core.Repository
         /// <summary>
         /// 数据库选项
         /// </summary>
-        protected readonly DbOption dbOption;
+        private readonly DbOption dbOption;
 
         public BaseRepository(DbOption option)
         {
@@ -30,7 +30,7 @@ namespace AQ.Core.Repository
             {
                 throw new ArgumentNullException(nameof(option));
             }
-            dbConnection = DbConnectionFactory.CreateConnection(option.DbType, option.DbConnString);
+            dbConnection = DbConnectionFactory.CreateConnection(dbOption.DbType, option.DbConnString);
             //var opt = new DbContextOptionsBuilder().Options;
             //dbContext = new DbContext(opt);
             //dbSet = dbContext.Set<T>();
