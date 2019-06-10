@@ -93,9 +93,11 @@ namespace AQ.Repository.SqlServer
             result.GetPageCount();
             result.Data = DBConnection.Query<SysUser>(GetListSql(condition, sqlWhere).ToString(), condition).ToList();
 
-
-            //result.TotalData = Count(d => d.CName == condition.CName);
-            var data = GetAllList().OrderByDescending(d => d.ModifyTime).Skip(condition.StartNum).Take(condition.PageSize);
+            result.TotalData = GetWhere(GetAllList(), condition).Count();
+            result.GetPageCount();
+            result.Data = GetWhere(GetAllList(), condition)
+                .OrderIf(condition.IsSortByDesc, d => condition.SortName)
+                .Skip(condition.StartNum).Take(condition.PageSize).ToList();
             //DBContext.Set<SysUser>().Where().OrderBy(d => d.Id).Skip((pageIndex - 1) * pageSize).Take(pageSize);
 
             return result;
@@ -240,6 +242,17 @@ select * from (
                 sqlWhere.Append(" and Status = @Status ");
             }
             return sqlWhere;
+        }
+
+        private IQueryable<SysUser> GetWhere(IQueryable<SysUser> source, SysUserCondition condition)
+        {
+            return source.WhereIf(string.IsNullOrEmpty(condition.Id), t => t.Id == condition.Id)
+                .WhereIf(string.IsNullOrEmpty(condition.JobCode), t => t.JobCode == condition.JobCode)
+                .WhereIf(string.IsNullOrEmpty(condition.Mobile), t => t.Mobile == condition.Mobile)
+                .WhereIf(string.IsNullOrEmpty(condition.NickName), t => t.NickName.Contains(condition.NickName))
+                .WhereIf(condition.Sex != null, t => t.Sex == condition.Sex)
+                .WhereIf(string.IsNullOrEmpty(condition.Account), t => t.Account == condition.Account)
+                .WhereIf(string.IsNullOrEmpty(condition.CName), t => t.NickName.Contains(condition.CName));
         }
 
         #endregion

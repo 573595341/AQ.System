@@ -91,12 +91,6 @@ namespace AQ.Repositories
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        int Count(Func<TEntity, bool> predicate);
-        /// <summary>
-        /// 查询指定条件数据数量
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
         Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate = null);
         #endregion
 

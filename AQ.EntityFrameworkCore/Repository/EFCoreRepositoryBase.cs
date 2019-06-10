@@ -176,20 +176,6 @@ namespace AQ.EntityFrameworkCore.Repository
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public int Count(Func<TEntity, bool> predicate)
-        {
-            if (predicate == null)
-            {
-                return _dbSet.Count();
-            }
-            return _dbSet.Count(predicate);
-        }
-
-        /// <summary>
-        /// 查询指定条件数据数量
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
         public Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate = null)
         {
             if (predicate == null)

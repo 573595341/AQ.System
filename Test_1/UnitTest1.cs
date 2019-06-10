@@ -22,8 +22,11 @@ namespace AQ.Test
         [Fact]
         public void TestMethod1()
         {
-            var path = AppDomain.CurrentDomain.BaseDirectory;
-            var services = BuildServiceForSqlServer();
+            //var path = AppDomain.CurrentDomain.BaseDirectory;
+            //var services = BuildServiceForSqlServer();
+            IQueryable<SysUser> data = null;
+            var sortName = "CreateTime";
+            data.OrderIf(true, t => sortName);
 
             //var ioption = service.GetRequiredService<IOptions<CodeGenerateOption>>();
             //var s = ioption.Value;
