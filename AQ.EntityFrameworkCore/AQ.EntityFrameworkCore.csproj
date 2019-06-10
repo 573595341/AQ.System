@@ -5,16 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="1.50.5" />
-    <PackageReference Include="Dapper.SimpleCRUD" Version="2.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.2.4" />
-    <PackageReference Include="MySql.Data" Version="8.0.13" />
-    <PackageReference Include="Npgsql" Version="4.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.4" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AQ.EntityFrameworkCore\AQ.EntityFrameworkCore.csproj" />
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AQ.Repositories\AQ.Repositories.csproj" />
   </ItemGroup>
 
 </Project>

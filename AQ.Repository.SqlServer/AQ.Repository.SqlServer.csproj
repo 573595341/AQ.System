@@ -21,6 +21,7 @@
     <ProjectReference Include="..\AQ.Core\AQ.Core.csproj" />
     <ProjectReference Include="..\AQ.IRepository\AQ.IRepository.csproj" />
     <ProjectReference Include="..\AQ.ModelExtension\AQ.ModelExtension.csproj" />
+    <ProjectReference Include="..\AQ.Repositories\AQ.Repositories.csproj" />
   </ItemGroup>
 
 </Project>
