@@ -15,9 +15,9 @@ namespace AQ.WebMain.Controllers.Admin
     public class UserController : Controller
     {
         private readonly ILogger<UserController> _logger;
-        private readonly ISysUserService _userService;
+        private readonly ISysUserServiceNew _userService;
         private readonly ISysKeyRegulationService _keyService;
-        public UserController(ISysUserService userService, ILogger<UserController> logger, ISysKeyRegulationService keyService)
+        public UserController(ISysUserServiceNew userService, ILogger<UserController> logger, ISysKeyRegulationService keyService)
         {
             _logger = logger;
             _userService = userService;

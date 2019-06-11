@@ -19,13 +19,13 @@ namespace AQ.ModelExtension
         public bool IsSortByDesc { get; set; }
 
         /// <summary>
-        /// 分页其实行号
+        /// 分页起始行号(从0开始)
         /// </summary>
         public int StartNum
         {
             get
             {
-                return (PageIndex - 1) * PageSize + 1;
+                return (PageIndex - 1) * PageSize;
             }
         }
 

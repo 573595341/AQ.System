@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AQ.Models\AQ.Models.csproj" />
     <ProjectReference Include="..\AQ.Repositories\AQ.Repositories.csproj" />
   </ItemGroup>
 

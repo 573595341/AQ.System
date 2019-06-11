@@ -88,16 +88,15 @@ namespace AQ.Repository.SqlServer
         public ListPagedResult<SysUser> GetListPaged(SysUserCondition condition)
         {
             var result = new ListPagedResult<SysUser>();
-            var sqlWhere = GetConditionSql(condition);
-            result.TotalData = GetDataCount(condition, sqlWhere);
-            result.GetPageCount();
-            result.Data = DBConnection.Query<SysUser>(GetListSql(condition, sqlWhere).ToString(), condition).ToList();
-
+            //var sqlWhere = GetConditionSql(condition);
+            //result.TotalData = GetDataCount(condition, sqlWhere);
+            //result.GetPageCount();
+            //result.Data = DBConnection.Query<SysUser>(GetListSql(condition, sqlWhere).ToString(), condition).ToList();
             result.TotalData = GetWhere(GetAllList(), condition).Count();
             result.GetPageCount();
             result.Data = GetWhere(GetAllList(), condition)
-                .OrderIf(condition.IsSortByDesc, d => condition.SortName)
-                .Skip(condition.StartNum).Take(condition.PageSize).ToList();
+                    .OrderIf(condition.IsSortByDesc, d => condition.SortName)
+                    .Skip(condition.StartNum).Take(condition.PageSize).ToList();
             //DBContext.Set<SysUser>().Where().OrderBy(d => d.Id).Skip((pageIndex - 1) * pageSize).Take(pageSize);
 
             return result;
@@ -244,15 +243,21 @@ select * from (
             return sqlWhere;
         }
 
+        /// <summary>
+        /// 获取查询条件
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="condition"></param>
+        /// <returns></returns>
         private IQueryable<SysUser> GetWhere(IQueryable<SysUser> source, SysUserCondition condition)
         {
-            return source.WhereIf(string.IsNullOrEmpty(condition.Id), t => t.Id == condition.Id)
-                .WhereIf(string.IsNullOrEmpty(condition.JobCode), t => t.JobCode == condition.JobCode)
-                .WhereIf(string.IsNullOrEmpty(condition.Mobile), t => t.Mobile == condition.Mobile)
-                .WhereIf(string.IsNullOrEmpty(condition.NickName), t => t.NickName.Contains(condition.NickName))
+            return source.WhereIf(!string.IsNullOrEmpty(condition.Id), t => t.Id == condition.Id)
+                .WhereIf(!string.IsNullOrEmpty(condition.JobCode), t => t.JobCode == condition.JobCode)
+                .WhereIf(!string.IsNullOrEmpty(condition.Mobile), t => t.Mobile == condition.Mobile)
+                .WhereIf(!string.IsNullOrEmpty(condition.NickName), t => t.NickName.Contains(condition.NickName))
                 .WhereIf(condition.Sex != null, t => t.Sex == condition.Sex)
-                .WhereIf(string.IsNullOrEmpty(condition.Account), t => t.Account == condition.Account)
-                .WhereIf(string.IsNullOrEmpty(condition.CName), t => t.NickName.Contains(condition.CName));
+                .WhereIf(!string.IsNullOrEmpty(condition.Account), t => t.Account == condition.Account)
+                .WhereIf(!string.IsNullOrEmpty(condition.CName), t => t.NickName.Contains(condition.CName));
         }
 
         #endregion

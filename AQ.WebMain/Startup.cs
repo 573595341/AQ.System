@@ -25,6 +25,8 @@ using AQ.Core;
 using AQ.WebMain.Profiles;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Mvc.Razor;
+using AQ.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace AQ.WebMain
 {
@@ -61,6 +63,11 @@ namespace AQ.WebMain
             //    //options.AreaViewLocationFormats.Add("/Areas/{2}/Views/Shared/{0}.cshtml");
             //    //options.AreaViewLocationFormats.Add("/Views/Shared/{0}.cshtml");
             //});
+            services.AddDbContext<DbContextBase>(options =>
+            {
+                options.EnableSensitiveDataLogging();
+                options.UseSqlServer(Configuration.GetConnectionString("SqlConn"), b => b.UseRowNumberForPaging());
+            });
 
             services.Configure<DbOption>(Configuration.GetSection("DbOptions"));
             //services.Configure<DbOption>(options =>
@@ -74,6 +81,7 @@ namespace AQ.WebMain
                 options.HeaderName = "PAGETOKEN";
                 options.SuppressXFrameOptionsHeader = false;
             });
+
             services.AddMvc(options =>
             {
                 options.Filters.Add<GlobalExceptionFilter>();
