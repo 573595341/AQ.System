@@ -82,10 +82,13 @@ namespace System.Linq
         static Expression<Func<T, TProp>> _GetLamba<T, TProp>(PropertyInfo memberProperty)
         {
             if (memberProperty.PropertyType != typeof(TProp)) throw new Exception();
-
-            var thisArg = Expression.Parameter(typeof(T));
-            var lamba = Expression.Lambda<Func<T, TProp>>(Expression.Property(thisArg, memberProperty), thisArg);
-            return lamba;
+            //lambda表达式树参数,和委托参数保持一致
+            var lambdaPara = Expression.Parameter(typeof(T));
+            //lambda表达式树主体，访问对象T中的某个字段或者属性
+            var body = Expression.Property(lambdaPara, memberProperty);
+            //创建lambda表达式树
+            var lambda = Expression.Lambda<Func<T, TProp>>(body, lambdaPara);
+            return lambda;
         }
     }
 }

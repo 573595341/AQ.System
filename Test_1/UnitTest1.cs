@@ -26,7 +26,7 @@ namespace AQ.Test
             //var services = BuildServiceForSqlServer();
             IQueryable<SysUser> data = null;
             var sortName = "CreateTime";
-            data.OrderIf(true, t => sortName);
+            data.OrderIf(true, t => t.CName);
 
             //var ioption = service.GetRequiredService<IOptions<CodeGenerateOption>>();
             //var s = ioption.Value;
