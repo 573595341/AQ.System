@@ -14,6 +14,7 @@ using AQ.WebMain.Commons.Extensions;
 using AQ.WebMain.Profiles;
 using AQ.Models;
 using AQ.ViewModels;
+using System.Collections.Generic;
 
 namespace AQ.Test
 {
@@ -24,9 +25,12 @@ namespace AQ.Test
         {
             //var path = AppDomain.CurrentDomain.BaseDirectory;
             //var services = BuildServiceForSqlServer();
-            IQueryable<SysUser> data = null;
-            var sortName = "CreateTime";
-            data.OrderIf(true, t => t.CName);
+            IQueryable<SysUser> data = (IQueryable<SysUser>)new List<SysUser>() {
+                 new SysUser(){ CreateTime = DateTime.Now }
+            };
+            var sortName = "CName"; //"CreateTime";
+            //data.OrderIf(!string.IsNullOrEmpty(sortName), sortName, t => t.ModifyTime);
+            data.OrderBy(sortName);
 
             //var ioption = service.GetRequiredService<IOptions<CodeGenerateOption>>();
             //var s = ioption.Value;
