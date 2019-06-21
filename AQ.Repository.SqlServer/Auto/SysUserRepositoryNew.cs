@@ -103,7 +103,7 @@ namespace AQ.Repository.SqlServer
             result.TotalData = GetWhere(GetAllList(), condition).Count();
             result.GetPageCount();
             result.Data = GetWhere(GetAllList(), condition)
-                    .OrderIf(condition.IsSortByDesc, d => condition.SortName)
+                    .OrderIf(!string.IsNullOrEmpty(condition.SortName), condition.SortName, d => condition.SortName, condition.IsSortByDesc)
                     .Skip(condition.StartNum).Take(condition.PageSize).ToList();
             //DBContext.Set<SysUser>().Where().OrderBy(d => d.Id).Skip((pageIndex - 1) * pageSize).Take(pageSize);
 

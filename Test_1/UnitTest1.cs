@@ -14,7 +14,7 @@ using AQ.WebMain.Commons.Extensions;
 using AQ.WebMain.Profiles;
 using AQ.Models;
 using AQ.ViewModels;
-using Dapper;
+using System.Collections.Generic;
 
 namespace AQ.Test
 {
@@ -25,17 +25,12 @@ namespace AQ.Test
         {
             //var path = AppDomain.CurrentDomain.BaseDirectory;
             //var services = BuildServiceForSqlServer();
-
-            var type = typeof(SysUser);
-            var props = type.GetProperties();
-            foreach (var prop in props)
-            {
-                var attrs = prop.GetCustomAttributes(typeof(IgnoreInsertAttribute), true);
-                if (attrs.Length > 0)
-                {
-                    var attr = attrs[0] as Attribute;
-                }
-            }
+            IQueryable<SysUser> data = (IQueryable<SysUser>)new List<SysUser>() {
+                 new SysUser(){ CreateTime = DateTime.Now }
+            };
+            var sortName = "CName"; //"CreateTime";
+            //data.OrderIf(!string.IsNullOrEmpty(sortName), sortName, t => t.ModifyTime);
+            data.OrderBy(sortName);
 
             //var ioption = service.GetRequiredService<IOptions<CodeGenerateOption>>();
             //var s = ioption.Value;

@@ -28,60 +28,111 @@ namespace System.Linq
         }
 
         /// <summary>
-        /// 排序
+        /// 条件排序
         /// </summary>
-        /// <typeparam name="T">实体对象</typeparam>
-        /// <typeparam name="TKey">排序字段</typeparam>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TProp"></typeparam>
         /// <param name="source"></param>
-        /// <param name="isSortByDesc">是否按照倒序排序</param>
-        /// <param name="predicate">条件树表达式</param>
+        /// <param name="sortName">指定排序字段名称(必须为T对象属性, 如果不存在则按照默认属性排序)</param>
+        /// <param name="defaultPredicate">默认排序字段</param>
+        /// <param name="isSortByDesc">是否降序排列</param>
         /// <returns></returns>
-        public static IQueryable<T> OrderIf<T, TKey>(this IQueryable<T> source, bool isSortByDesc, Expression<Func<T, TKey>> predicate)
+        public static IOrderedQueryable<T> OrderIf<T, TProp>(this IQueryable<T> source, string sortName, Expression<Func<T, TProp>> defaultPredicate, bool isSortByDesc = true)
         {
-            var memberExpression = predicate.Body as System.Linq.Expressions.MemberExpression;
-            var prop = typeof(T).GetProperty(memberExpression.Member.Name, Reflection.BindingFlags.IgnoreCase | Reflection.BindingFlags.Instance | Reflection.BindingFlags.Public);
-            if (prop != null)
+            if (string.IsNullOrEmpty(sortName))
             {
-                return isSortByDesc ? source.OrderByDescending(predicate) : source.OrderBy(predicate);
+                return isSortByDesc ? source.OrderByDescending(defaultPredicate) : source.OrderBy(defaultPredicate);
             }
-            return source;
+            else
+            {
+                return _OrderBy(source, sortName, isSortByDesc);
+            }
         }
 
-
-        public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> query, string propertyName)
+        /// <summary>
+        /// 按照指定字段升序排序
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="sortName">排序字段名称(必须为T对象字段)</param>
+        /// <returns></returns>
+        public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> source, string sortName)
         {
-            return _OrderBy<T>(query, propertyName, false);
+            return _OrderBy<T>(source, sortName, false);
         }
 
-        public static IOrderedQueryable<T> OrderByDescending<T>(this IQueryable<T> query, string propertyName)
+        /// <summary>
+        /// 按照指定字段倒序排序
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="sortName">排序字段名称(必须为T对象字段)</param>
+        /// <returns></returns>
+        public static IOrderedQueryable<T> OrderByDescending<T>(this IQueryable<T> source, string sortName)
         {
-            return _OrderBy<T>(query, propertyName, true);
+            return _OrderBy<T>(source, sortName, true);
         }
 
-        static IOrderedQueryable<T> _OrderBy<T>(IQueryable<T> query, string propertyName, bool isDesc)
+        /// <summary>
+        /// 根据指定字段执行排序
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="propertyName">排序字段名称</param>
+        /// <param name="isDesc"></param>
+        /// <returns></returns>
+        private static IOrderedQueryable<T> _OrderBy<T>(IQueryable<T> source, string propertyName, bool isDesc)
         {
-            string methodname = (isDesc) ? "OrderByDescendingInternal" : "OrderByInternal";
-
-            var memberProp = typeof(T).GetProperty(propertyName);
-
-            var method = typeof(IQueryableExtensions).GetMethod(methodname).MakeGenericMethod(typeof(T), memberProp.PropertyType);
-
-            return (IOrderedQueryable<T>)method.Invoke(null, new object[] { query, memberProp });
+            if (string.IsNullOrEmpty(propertyName))
+            {
+                return (IOrderedQueryable<T>)source;
+            }
+            var memberProp = typeof(T).GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public);
+            if (memberProp == null)
+            {
+                return (IOrderedQueryable<T>)source;
+            }
+            string methodname = isDesc ? "OrderByDescendingInternal" : "OrderByInternal";
+            var method = typeof(IQueryableExtensions).GetMethod(methodname, BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(typeof(T), memberProp.PropertyType);
+            return (IOrderedQueryable<T>)method.Invoke(null, new object[] { source, memberProp });
         }
 
-        public static IOrderedQueryable<T> OrderByInternal<T, TProp>(IQueryable<T> query, PropertyInfo memberProperty)
+        /// <summary>
+        /// 升序
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TProp"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="memberProperty"></param>
+        /// <returns></returns>
+        private static IOrderedQueryable<T> OrderByInternal<T, TProp>(IQueryable<T> source, PropertyInfo memberProperty)
         {
-            return query.OrderBy(_GetLamba<T, TProp>(memberProperty));
+            return source.OrderBy(_GetLamba<T, TProp>(memberProperty));
         }
 
-        public static IOrderedQueryable<T> OrderByDescendingInternal<T, TProp>(IQueryable<T> query, PropertyInfo memberProperty)
+        /// <summary>
+        /// 降序
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TProp"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="memberProperty"></param>
+        /// <returns></returns>
+        private static IOrderedQueryable<T> OrderByDescendingInternal<T, TProp>(IQueryable<T> source, PropertyInfo memberProperty)
         {
-            return query.OrderByDescending(_GetLamba<T, TProp>(memberProperty));
+            return source.OrderByDescending(_GetLamba<T, TProp>(memberProperty));
         }
 
-        static Expression<Func<T, TProp>> _GetLamba<T, TProp>(PropertyInfo memberProperty)
+        /// <summary>
+        /// 获取lambda表达式树
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TProp"></typeparam>
+        /// <param name="memberProperty">对象指定属性</param>
+        /// <returns></returns>
+        private static Expression<Func<T, TProp>> _GetLamba<T, TProp>(PropertyInfo memberProperty)
         {
-            if (memberProperty.PropertyType != typeof(TProp)) throw new Exception();
+            //if (memberProperty.PropertyType != typeof(TProp)) throw new Exception();
             //lambda表达式树参数,和委托参数保持一致
             var lambdaPara = Expression.Parameter(typeof(T));
             //lambda表达式树主体，访问对象T中的某个字段或者属性
