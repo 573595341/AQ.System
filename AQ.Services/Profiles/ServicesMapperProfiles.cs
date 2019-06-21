@@ -89,9 +89,9 @@ namespace AQ.WebMain.Profiles
                 Sex = s.Sex,
                 Status = s.Status,
                 IsDelete = s.IsDelete,
-                CreateTime = s.CreateTime,
+                CreateTime = s.CreateTime != DateTime.MinValue ? s.CreateTime : DateTime.Now,
                 CreateUser = s.CreateUser ?? string.Empty,
-                ModifyTime = s.ModifyTime,
+                ModifyTime = s.ModifyTime != DateTime.MinValue ? s.ModifyTime : DateTime.Now,
                 ModifyUser = s.ModifyUser ?? string.Empty
             });
             #endregion

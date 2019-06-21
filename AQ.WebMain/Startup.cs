@@ -121,8 +121,8 @@ namespace AQ.WebMain
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            app.UseStatusCodePagesWithRedirects("/Error/{0}");
             //app.UseStatusCodePages( async context => await context.HttpContext.Response.WriteAsync("404"));
+            app.UseStatusCodePagesWithRedirects("/Error/{0}");
 
             //读取Nlog配置文件
             env.ConfigureNLog("nlog.config");

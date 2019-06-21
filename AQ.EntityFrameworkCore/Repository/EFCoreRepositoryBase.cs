@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -265,6 +266,16 @@ namespace AQ.EntityFrameworkCore.Repository
             if (entity != null)
             {
                 _dbSet.Update(entity);
+                var type = typeof(TEntity);
+                var props = type.GetProperties();
+                foreach (var prop in props)
+                {
+                    var attrs = prop.GetCustomAttributes(typeof(NonUpdateAttribute), true);
+                    if (attrs.Length > 0)
+                    {
+                        DBContext.Entry(entity).Property(prop.Name).IsModified = false;
+                    }
+                }
             }
         }
         /// <summary>
@@ -276,6 +287,19 @@ namespace AQ.EntityFrameworkCore.Repository
             if (entities != null)
             {
                 _dbSet.UpdateRange(entities);
+                var type = typeof(TEntity);
+                var props = type.GetProperties();
+                foreach (var prop in props)
+                {
+                    var attrs = prop.GetCustomAttributes(typeof(NonUpdateAttribute), true);
+                    if (attrs.Length > 0)
+                    {
+                        foreach (var item in entities)
+                        {
+                            DBContext.Entry(item).Property(prop.Name).IsModified = false;
+                        }
+                    }
+                }
             }
         }
         /// <summary>

@@ -177,6 +177,7 @@ namespace AQ.Services
                 }
                 var data = _mapper.Map<SysUser>(model);
                 data.ModifyTime = DateTime.Now;
+                //_repository.DBContext
                 _repository.Update(data);
                 if (_repository.SaveChanges() > 0)
                 {

@@ -87,6 +87,14 @@ namespace AQ.Repository.SqlServer
         /// <returns></returns>
         public ListPagedResult<SysUser> GetListPaged(SysUserCondition condition)
         {
+            //var user = Get(t => t.Id == "U0005");
+            //DBContext.Attach(user);
+            //var user = new SysUser() { Id = "U0005" };
+            //user.CName = DateTime.Now.ToString("HHmmss");
+            //user.CreateTime = DateTime.Now;
+            //Update(user);
+            //var r = SaveChanges();
+
             var result = new ListPagedResult<SysUser>();
             //var sqlWhere = GetConditionSql(condition);
             //result.TotalData = GetDataCount(condition, sqlWhere);
