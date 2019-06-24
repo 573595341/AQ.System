@@ -12,6 +12,7 @@ using AQ.Core.Repository;
 using AQ.Models;
 using AQ.IRepository;
 using AQ.ModelExtension;
+using AQ.EntityFrameworkCore;
 
 /*[end custom code head]*/
 
@@ -23,7 +24,8 @@ namespace {RepositoryNamespace}
 		/*[begin custom code body]*/
 		#region 自定义代码区域,重新生成代码不会覆盖
         private readonly ILogger<{ModelName}Repository> _logger;
-		public {ModelName}Repository(IOptionsSnapshot<DbOption> option,ILogger<{ModelName}Repository> logger) : base(option.Value)
+		public {ModelName}Repository(DbContextBase dbContextBase,ILogger<{ModelName}Repository> logger) 
+			: base(dbContextBase)
         {
             _logger = logger;
         }

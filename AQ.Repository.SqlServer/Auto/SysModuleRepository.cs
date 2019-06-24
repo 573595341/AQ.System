@@ -12,6 +12,7 @@ using AQ.Core.Repository;
 using AQ.Models;
 using AQ.IRepository;
 using AQ.ModelExtension;
+using AQ.EntityFrameworkCore;
 
 /*[end custom code head]*/
 
@@ -23,7 +24,8 @@ namespace AQ.Repository.SqlServer
         /*[begin custom code body]*/
         #region 自定义代码区域,重新生成代码不会覆盖
         private readonly ILogger<SysModuleRepository> _logger;
-        public SysModuleRepository(IOptionsSnapshot<DbOption> option, ILogger<SysModuleRepository> log) : base(option.Value)
+        public SysModuleRepository(IOptionsSnapshot<DbOption> option, ILogger<SysModuleRepository> log)
+            : base(option.Value)
         {
             _logger = log;
         }

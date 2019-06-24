@@ -25,7 +25,7 @@ namespace AQ.CodeTools
             ignoreSelect = new List<string>();
             ignoreInsert = new List<string>()
             {
-                "CreateTime","ModifyTime","IsDelete"
+                //"CreateTime","ModifyTime","IsDelete"
             };
             ignoreUpdate = new List<string>()
             {

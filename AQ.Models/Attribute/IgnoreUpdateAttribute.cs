@@ -8,7 +8,7 @@ namespace System.ComponentModel.DataAnnotations
     /// 忽略更新属性
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, Inherited = true)]
-    public class NonUpdateAttribute : Attribute
+    public class IgnoreUpdateAttribute : Attribute
     {
 
     }

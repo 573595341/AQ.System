@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 /*[begin custom code head]*/
 //自定义命名空间区域
 using Dapper;
+using IgnoreUpdateAttribute = System.ComponentModel.DataAnnotations.IgnoreUpdateAttribute;
 using KeyAttribute = Dapper.KeyAttribute;
 using RequiredAttribute = Dapper.RequiredAttribute;
 
@@ -115,5 +116,5 @@ namespace AQ.Models
         public string ModuleName { get; set; }
         #endregion
         /*[end custom code bottom]*/
-	}
+    }
 }

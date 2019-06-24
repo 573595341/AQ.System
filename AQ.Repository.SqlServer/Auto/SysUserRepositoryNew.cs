@@ -13,6 +13,7 @@ using AQ.Models;
 using AQ.IRepository;
 using AQ.ModelExtension;
 using AQ.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 /*[end custom code head]*/
 
@@ -94,6 +95,18 @@ namespace AQ.Repository.SqlServer
             //user.CreateTime = DateTime.Now;
             //Update(user);
             //var r = SaveChanges();
+
+            var ids = new string[] {
+               "U0001",
+               "U0004",
+               "U0005"
+            };
+            IQueryable<SysUser> data = null;
+
+            //data = GetAllList().GetConditionExpression(ids, "Id");
+
+            //var r = data.ToList();
+
 
             var result = new ListPagedResult<SysUser>();
             //var sqlWhere = GetConditionSql(condition);

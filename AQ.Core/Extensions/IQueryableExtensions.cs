@@ -141,5 +141,45 @@ namespace System.Linq
             var lambda = Expression.Lambda<Func<T, TProp>>(body, lambdaPara);
             return lambda;
         }
+
+
+    //    public static Expression<Func<TElement, bool>> BuildWhereInExpression<TElement, TValue>(
+    //Expression<Func<TElement, TValue>> propertySelector, IEnumerable<TValue> values)
+    //    {
+    //        ParameterExpression p = propertySelector.Parameters.Single();
+    //        if (!values.Any())
+    //            return e => false;
+
+    //        var equals = values.Select(value => (Expression)Expression.Equal(propertySelector.Body,
+    //            Expression.Constant(value, typeof(TValue))));
+    //        var body = equals.Aggregate<Expression>((accumulate, equal) => Expression.Or(accumulate, equal));
+
+    //        return Expression.Lambda<Func<TElement, bool>>(body, p);
+    //    }
+
+    //    public static IQueryable<TElement> WhereIn<TElement, TValue>(this IQueryable<TElement> source,
+    //        Expression<Func<TElement, TValue>> propertySelector, params TValue[] values)
+    //    {
+    //        return source.Where(BuildWhereInExpression(propertySelector, values));
+    //    }
+
+    //    public static IQueryable<TElement> GetConditionExpression<TElement>(this IQueryable<TElement> source, string[] options, string fieldName)
+    //    {
+    //        ParameterExpression left = Expression.Parameter(typeof(TElement), "c");//c=>
+    //        Expression expression = Expression.Constant(false);
+    //        foreach (var optionName in options)
+    //        {
+    //            Expression right = Expression.Call
+    //                   (
+    //                      Expression.Property(left, typeof(TElement).GetProperty(fieldName)),  //c.DataSourceName
+    //                      typeof(string).GetMethod("Equals", new Type[] { typeof(string) }),// 反射使用.Contains()方法                         
+    //                      Expression.Constant(optionName)           // .Contains(optionName)
+    //                   );
+    //            expression = Expression.Or(right, expression);//c.DataSourceName.contain("") || c.DataSourceName.contain("") 
+    //        }
+    //        Expression<Func<TElement, bool>> finalExpression
+    //            = Expression.Lambda<Func<TElement, bool>>(expression, new ParameterExpression[] { left });
+    //        return source.Where( finalExpression);
+    //    }
     }
 }

@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AQ.EntityFrameworkCore.Repository
@@ -266,12 +267,11 @@ namespace AQ.EntityFrameworkCore.Repository
             if (entity != null)
             {
                 _dbSet.Update(entity);
-                var type = typeof(TEntity);
-                var props = type.GetProperties();
+                var attrName = typeof(IgnoreUpdateAttribute).Name;
+                var props = typeof(TEntity).GetProperties();
                 foreach (var prop in props)
                 {
-                    var attrs = prop.GetCustomAttributes(typeof(NonUpdateAttribute), true);
-                    if (attrs.Length > 0)
+                    if (prop.GetCustomAttributes(true).FirstOrDefault(attr => attr.GetType().Name == attrName) != null)
                     {
                         DBContext.Entry(entity).Property(prop.Name).IsModified = false;
                     }
@@ -287,12 +287,11 @@ namespace AQ.EntityFrameworkCore.Repository
             if (entities != null)
             {
                 _dbSet.UpdateRange(entities);
-                var type = typeof(TEntity);
-                var props = type.GetProperties();
+                var attrName = typeof(IgnoreUpdateAttribute).Name;
+                var props = typeof(TEntity).GetProperties();
                 foreach (var prop in props)
                 {
-                    var attrs = prop.GetCustomAttributes(typeof(NonUpdateAttribute), true);
-                    if (attrs.Length > 0)
+                    if (prop.GetCustomAttributes(true).FirstOrDefault(attr => attr.GetType().Name == attrName) != null)
                     {
                         foreach (var item in entities)
                         {
