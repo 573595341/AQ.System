@@ -42,7 +42,7 @@ namespace AQ.Services
                     result.ResultMsg = $"获取模块信息为空";
                     return result;
                 }
-                var menuData = _menuRepository.GetList();
+                var menuData = _menuRepository.GetAllList().ToList();
                 if (menuData == null || menuData.Count() == 0)
                 {
                     result.ResultMsg = $"获取菜单信息为空";

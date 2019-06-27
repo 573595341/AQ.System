@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 /*[begin custom code head]*/
 //自定义命名空间区域
@@ -74,6 +75,10 @@ namespace AQ.Models
 
         /*[begin custom code bottom]*/
         #region 自定义代码区域,重新生成代码不会覆盖
+
+        /// <summary>菜单</summary>
+        public List<SysMenu> Menus { get; set; }
+
         #endregion
         /*[end custom code bottom]*/
     }

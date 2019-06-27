@@ -95,7 +95,7 @@ namespace AQ.EntityFrameworkCore.Repository
         /// 批量删除数据
         /// </summary>
         /// <param name="entities">实体对象集合</param>
-        public void DeleteList(IEnumerable<TEntity> entities)
+        public void Delete(IEnumerable<TEntity> entities)
         {
             if (entities != null)
             {
@@ -106,7 +106,7 @@ namespace AQ.EntityFrameworkCore.Repository
         /// 批量删除数据
         /// </summary>
         /// <param name="entities">实体对象数组</param>
-        public void DeleteList(params TEntity[] entities)
+        public void Delete(params TEntity[] entities)
         {
             if (entities != null && entities.Length > 0)
             {

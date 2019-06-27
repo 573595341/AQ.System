@@ -13,32 +13,24 @@ namespace AQ.IRepository
 {
     public interface ISysUserRepositoryNew : IRepositoryBase<SysUser, String>
     {
-		/*[begin custom code body]*/
+        /*[begin custom code body]*/
         #region 自定义代码区域,重新生成代码不会覆盖
         #endregion
         /*[end custom code body]*/
 
-		/// <summary>
+        /// <summary>
         /// 逻辑删除
         /// </summary>
         /// <param name="keys"></param>
         /// <returns></returns>
-        int DeleteLogical(String[] keys);
+        void DeleteLogical(String[] keys);
 
-		/// <summary>
+        /// <summary>
         /// 逻辑删除
         /// </summary>
         /// <param name="keys"></param>
         /// <returns></returns>
-        Task<int> DeleteLogicalAsync(String[] keys);
-
-		/// <summary>
-        /// 更改状态
-        /// </summary>
-        /// <param name="status">状态</param>
-        /// <param name="keys">主键</param>
-        /// <returns></returns>
-        int UpdateStatus(int status, String[] keys);
+        void DeleteLogicalAsync(String[] keys);
 
         /// <summary>
         /// 更改状态
@@ -46,9 +38,24 @@ namespace AQ.IRepository
         /// <param name="status">状态</param>
         /// <param name="keys">主键</param>
         /// <returns></returns>
-        Task<int> UpdateStatusAsync(int status, String[] keys);
+        void UpdateStatus(int status, String[] keys);
 
-		/*[begin custom code bottom]*/
+        /// <summary>
+        /// 更改状态
+        /// </summary>
+        /// <param name="status">状态</param>
+        /// <param name="keys">主键</param>
+        /// <returns></returns>
+        void UpdateStatusAsync(int status, String[] keys);
+
+        /// <summary>
+        /// 批量删除
+        /// </summary>
+        /// <param name="keys">主键</param>
+        /// <returns></returns>
+        void Delete(string[] keys);
+
+        /*[begin custom code bottom]*/
         #region 自定义代码区域,重新生成代码不会覆盖
 
         /// <summary>

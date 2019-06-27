@@ -27,6 +27,7 @@ namespace AQ.WebMain.Controllers.Admin
         // GET: User
         public ActionResult Index()
         {
+            
             return View();
         }
 

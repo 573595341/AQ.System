@@ -47,12 +47,12 @@ namespace AQ.Repositories
         /// 批量删除数据
         /// </summary>
         /// <param name="entities">实体对象集合</param>
-        void DeleteList(IEnumerable<TEntity> entities);
+        void Delete(IEnumerable<TEntity> entities);
         /// <summary>
         /// 批量删除数据
         /// </summary>
         /// <param name="entities">实体对象数组</param>
-        void DeleteList(params TEntity[] entities);
+        void Delete(params TEntity[] entities);
         #endregion
 
         #region Query

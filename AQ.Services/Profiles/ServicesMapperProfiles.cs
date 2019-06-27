@@ -20,7 +20,29 @@ namespace AQ.WebMain.Profiles
             CreateMap<SysKeyRegulation, SysKeyRegulationViewModel>();
 
             #region SysMenu
-            CreateMap<SysMenu, SysMenuViewModel>();
+            CreateMap<SysMenu, SysMenuViewModel>().ConvertUsing((s, context) =>
+            {
+                return new SysMenuViewModel()
+                {
+                    Id = s.Id,
+                    Name = s.Name ?? string.Empty,
+                    Level = s.Level,
+                    PageUrl = s.PageUrl ?? string.Empty,
+                    ParentId = s.ParentId ?? string.Empty,
+                    ParentName = s.ParentMenu != null ? s.ParentMenu.Name : string.Empty,
+                    ModuleId = s.ModuleId ?? string.Empty,
+                    ModuleName = s.Module != null ? s.Module.Name : string.Empty,
+                    Ico = s.Ico ?? string.Empty,
+                    Type = s.Type ?? string.Empty,
+                    Sort = s.Sort,
+                    Status = s.Status,
+                    IsDelete = s.IsDelete,
+                    CreateTime = s.CreateTime,
+                    CreateUser = s.CreateUser ?? string.Empty,
+                    ModifyTime = s.ModifyTime,
+                    ModifyUser = s.ModifyUser ?? string.Empty
+                };
+            });
             CreateMap<SysMenuViewModel, SysMenu>().ConvertUsing((s, context) =>
             {
                 return new SysMenu()
@@ -30,9 +52,9 @@ namespace AQ.WebMain.Profiles
                     Level = s.Level,
                     PageUrl = s.PageUrl ?? string.Empty,
                     ParentId = s.ParentId ?? string.Empty,
-                    ParentName = s.ParentName ?? string.Empty,
+                    //ParentName = s.ParentName ?? string.Empty,
                     ModuleId = s.ModuleId ?? string.Empty,
-                    ModuleName = s.ModuleName ?? string.Empty,
+                    //ModuleName = s.ModuleName ?? string.Empty,
                     Ico = s.Ico ?? string.Empty,
                     Type = s.Type ?? string.Empty,
                     Sort = s.Sort,

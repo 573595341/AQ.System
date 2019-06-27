@@ -51,7 +51,7 @@ namespace AQ.Services
             var result = new ListPagedResult<SysMenuViewModel>();
             try
             {
-                var data = _repository.GetList().Where(d => !d.IsDelete && d.Status == 1).ToList();
+                var data = _repository.GetAllList(d => d.IsDelete == false).ToList();
                 result.Data = _mapper.Map<List<SysMenuViewModel>>(data);
                 result.ResultCode = CommonResults.Success.ResultCode;
                 result.ResultMsg = CommonResults.Success.ResultMsg;
@@ -81,12 +81,12 @@ namespace AQ.Services
             }
             try
             {
-                var data = _repository.GetListPaged(condition);
-                result.Data = _mapper.Map<List<SysMenuViewModel>>(data.Data);
+                var datas = _repository.GetListPaged(condition);
+                result.Data = _mapper.Map<List<SysMenuViewModel>>(datas.Data);
                 result.PageIndex = condition.PageIndex;
                 result.PageSize = condition.PageSize;
-                result.PageCount = data.PageCount;
-                result.TotalData = data.TotalData;
+                result.PageCount = datas.PageCount;
+                result.TotalData = datas.TotalData;
                 result.ResultCode = CommonResults.Success.ResultCode;
                 result.ResultMsg = CommonResults.Success.ResultMsg;
             }
@@ -115,7 +115,7 @@ namespace AQ.Services
             }
             try
             {
-                var data = _repository.Get(id);
+                var data = _repository.Get(t => t.Id == id);
                 result.Data = _mapper.Map<SysMenuViewModel>(data);
                 result.ResultCode = CommonResults.Success.ResultCode;
                 result.ResultMsg = CommonResults.Success.ResultMsg;
@@ -148,10 +148,8 @@ namespace AQ.Services
                 }
                 var data = _mapper.Map<SysMenu>(model);
                 data.Id = _keyRepository.GenerateKey("Id", "SysMenu");
-                data.CreateUser = string.Empty;
-                data.ModifyUser = string.Empty;
-                data.PageUrl = data.PageUrl ?? string.Empty;
-                result = _repository.Insert(data) != null ? CommonResults.Success : CommonResults.Fail;
+                _repository.Add(data);
+                result = _repository.SaveChanges() > -1 ? CommonResults.Success : CommonResults.Fail;
             }
             catch (Exception ex)
             {
@@ -181,10 +179,8 @@ namespace AQ.Services
                 {
                     var data = _mapper.Map<SysMenu>(model);
                     data.ModifyTime = DateTime.Now;
-                    if (_repository.Update(data) > 0)
-                    {
-                        result = CommonResults.Success;
-                    }
+                    _repository.Update(data);
+                    result = _repository.SaveChanges() > -1 ? CommonResults.Success : CommonResults.Fail;
                 }
             }
             catch (Exception ex)
@@ -212,7 +208,8 @@ namespace AQ.Services
             }
             try
             {
-                result = _repository.UpdateStatus(status, keys) > 0 ? CommonResults.Success : CommonResults.Fail;
+                _repository.UpdateStatus(status, keys);
+                result = _repository.SaveChanges() > -1 ? CommonResults.Success : CommonResults.Fail;
             }
             catch (Exception ex)
             {
@@ -237,7 +234,8 @@ namespace AQ.Services
                     result = CommonResults.ParameterError;
                     return result;
                 }
-                result = _repository.DeleteLogical(keys) > 0 ? CommonResults.Success : CommonResults.Fail;
+                _repository.DeleteLogical(keys);
+                result = _repository.SaveChanges() > -1 ? CommonResults.Success : CommonResults.Fail;
             }
             catch (Exception ex)
             {
@@ -262,7 +260,8 @@ namespace AQ.Services
                     result = CommonResults.ParameterError;
                     return result;
                 }
-                result = _repository.Delete(id) > 0 ? CommonResults.Success : CommonResults.Fail;
+                _repository.Delete(id);
+                result = _repository.SaveChanges() > -1 ? CommonResults.Success : CommonResults.Fail;
             }
             catch (Exception ex)
             {

@@ -12,33 +12,49 @@ using AQ.Core.Repository;
 using AQ.Models;
 using AQ.IRepository;
 using AQ.ModelExtension;
+using AQ.EntityFrameworkCore;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 /*[end custom code head]*/
 
 namespace AQ.Repository.SqlServer
 {
-    public class SysMenuRepository : BaseRepository<SysMenu, String>, ISysMenuRepository
+    //public class SysMenuRepository : BaseRepository<SysMenu, String>, ISysMenuRepository
+    public class SysMenuRepository : RepositoryBase<SysMenu, String>, ISysMenuRepository
     {
 
-		/*[begin custom code body]*/
+        /*[begin custom code body]*/
         #region 自定义代码区域,重新生成代码不会覆盖
         private readonly ILogger<SysMenuRepository> _logger;
-        public SysMenuRepository(IOptionsSnapshot<DbOption> option, ILogger<SysMenuRepository> log) : base(option.Value)
+        //public SysMenuRepository(IOptionsSnapshot<DbOption> option, ILogger<SysMenuRepository> log) : base(option.Value)
+        //{
+        //    _logger = log;
+        //}
+        public SysMenuRepository(DbContextBase dbContextBase, ILogger<SysMenuRepository> log) : base(dbContextBase)
         {
             _logger = log;
         }
         #endregion
         /*[end custom code body]*/
-        
-		/// <summary>
+
+        /// <summary>
         /// 逻辑删除
         /// </summary>
         /// <param name="keys"></param>
         /// <returns></returns>
-        public int DeleteLogical(String[] keys)
+        public void DeleteLogical(String[] keys)
         {
-            var sql = $"update SysMenu set IsDelete = 1,ModifyTime = getdate() where Id in @Keys";
-            return dbConnection.Execute(sql, new { Keys = keys });
+            foreach (var key in keys)
+            {
+                var item = new SysMenu()
+                {
+                    Id = key
+                };
+                DBContext.Attach(item);
+                item.IsDelete = true;
+                item.ModifyTime = DateTime.Now;
+            }
         }
 
         /// <summary>
@@ -46,37 +62,82 @@ namespace AQ.Repository.SqlServer
         /// </summary>
         /// <param name="keys"></param>
         /// <returns></returns>
-        public async Task<int> DeleteLogicalAsync(String[] keys)
+        public void DeleteLogicalAsync(String[] keys)
         {
-            var sql = $"update SysMenu set IsDelete = 1,ModifyTime = getdate() where Id in @Keys";
-            return await dbConnection.ExecuteAsync(sql, new { Keys = keys });
-        }
-
-		/// <summary>
-        /// 更改状态
-        /// </summary>
-        /// <param name="status">状态</param>
-        /// <param name="keys">主键</param>
-        /// <returns></returns>
-        public int UpdateStatus(int status, String[] keys)
-        {
-            var sql = $"update SysMenu set Status = @Status,ModifyTime = getdate() where Id in @Keys";
-            return dbConnection.Execute(sql, new { Status = status, Keys = keys });
+            foreach (var key in keys)
+            {
+                var item = new SysMenu()
+                {
+                    Id = key
+                };
+                DBContext.Attach(item);
+                item.IsDelete = true;
+                item.ModifyTime = DateTime.Now;
+            }
         }
 
         /// <summary>
         /// 更改状态
         /// </summary>
-        /// <param name="status">状态</param>
+        /// <param name="status">状态(1:启用 其他:停用)</param>
         /// <param name="keys">主键</param>
         /// <returns></returns>
-        public async Task<int> UpdateStatusAsync(int status, String[] keys)
+        public void UpdateStatus(int status, String[] keys)
         {
-            var sql = $"update SysMenu set Status = @Status,ModifyTime = getdate() where Id in @Keys";
-            return await dbConnection.ExecuteAsync(sql, new { Status = status, Keys = keys });
+            foreach (var key in keys)
+            {
+                var item = new SysMenu()
+                {
+                    Id = key,
+                    Status = -1
+                };
+                DBContext.Attach(item);
+                item.Status = status == 1 ? 1 : 0;
+                item.ModifyTime = DateTime.Now;
+            }
         }
 
-		/*[begin custom code bottom]*/
+        /// <summary>
+        /// 更改状态
+        /// </summary>
+        /// <param name="status">状态(1:启用 其他:停用)</param>
+        /// <param name="keys">主键</param>
+        /// <returns></returns>
+        public void UpdateStatusAsync(int status, String[] keys)
+        {
+            foreach (var key in keys)
+            {
+                var item = new SysMenu()
+                {
+                    Id = key,
+                    Status = -1
+                };
+                DBContext.Attach(item);
+                item.Status = status == 1 ? status : 0;
+                item.ModifyTime = DateTime.Now;
+            }
+        }
+
+        /// <summary>
+        /// 批量删除
+        /// </summary>
+        /// <param name="keys">主键</param>
+        /// <returns></returns>
+        public void Delete(string[] keys)
+        {
+            var data = new List<SysMenu>();
+            foreach (var key in keys)
+            {
+                data.Add(
+                    new SysMenu()
+                    {
+                        Id = key
+                    });
+            }
+            DBContext.Set<SysMenu>().RemoveRange();
+        }
+
+        /*[begin custom code bottom]*/
         #region 自定义代码区域,重新生成代码不会覆盖
 
         /// <summary>
@@ -86,12 +147,25 @@ namespace AQ.Repository.SqlServer
         /// <returns></returns>
         public ListPagedResult<SysMenu> GetListPaged(SysMenuCondition condition)
         {
+            //condition.Parent = "MENU0012";
+            //condition.Module = "MODULE0007";
             var result = new ListPagedResult<SysMenu>();
-            var sqlWhere = GetConditionSql(condition);
-            result.TotalData = GetDataCount(condition, sqlWhere);
+            result.TotalData = SetWhere(GetAllList().Include(t => t.Module).Include(t => t.ParentMenu), condition).Count();
             result.GetPageCount();
-            result.Data = dbConnection.Query<SysMenu>(GetListSql(condition, sqlWhere).ToString(), condition).ToList();
+            var data = SetWhere(GetAllList().Include(t => t.Module).Include(t => t.ParentMenu), condition);
+            result.Data = SetWhere(data, condition)
+                .OrderIf(condition.SortName, d => condition.SortName, condition.IsSortByDesc)
+                .Skip(condition.StartNum)
+                .Take(condition.PageSize)
+                .ToList();
             return result;
+
+            //var data = GetAllList().Join(GetAllList(), t => t.ParentId, t => t.Id, (t1, t2) => new SysMenu()
+            //{
+            //    Id = t1.Id,
+            //    Name = t1.Name,
+            //    ParentMenu = new SysMenu() { Id = t2.Id, Name = t2.Name }
+            //}).ToList();
         }
 
         /// <summary>
@@ -101,98 +175,23 @@ namespace AQ.Repository.SqlServer
         /// <returns></returns>
         public async Task<ListPagedResult<SysMenu>> GetListPagedAsync(SysMenuCondition condition)
         {
-            var result = new ListPagedResult<SysMenu>();
-            var sqlWhere = GetConditionSql(condition);
-            result.TotalData = await GetDataCountAsync(condition, sqlWhere);
-            result.GetPageCount();
-            var data = await dbConnection.QueryAsync<SysMenu>(GetListSql(condition, sqlWhere).ToString(), condition);
-            result.Data = data.ToList();
-            return result;
+            var result = GetListPaged(condition);
+            return await Task.Run(() => result);
         }
 
         /// <summary>
-        /// 获取分页列表总条数
+        /// 获取查询条件
         /// </summary>
+        /// <param name="source"></param>
         /// <param name="condition"></param>
-        /// <param name="sqlWhere"></param>
         /// <returns></returns>
-        private int GetDataCount(SysMenuCondition condition, StringBuilder sqlWhere)
+        private IQueryable<SysMenu> SetWhere(IQueryable<SysMenu> source, SysMenuCondition condition)
         {
-            return dbConnection.ExecuteScalar<int>(GetListCountSql(condition, sqlWhere).ToString(), condition);
-        }
-
-        /// <summary>
-        /// 获取分页列表总条数
-        /// </summary>
-        /// <param name="condition"></param>
-        /// <param name="sqlWhere"></param>
-        /// <returns></returns>
-        private async Task<int> GetDataCountAsync(SysMenuCondition condition, StringBuilder sqlWhere)
-        {
-            return await dbConnection.ExecuteScalarAsync<int>(GetListCountSql(condition, sqlWhere).ToString(), condition);
-        }
-
-        /// <summary>
-        /// 获取查询列表sql语句
-        /// </summary>
-        /// <param name="condition"></param>
-        /// <param name="sqlWhere"></param>
-        /// <returns></returns>
-        private StringBuilder GetListSql(SysMenuCondition condition, StringBuilder sqlWhere)
-        {
-            #region sql
-            StringBuilder sql = new StringBuilder();
-            sql.AppendFormat(@"
-select * from (
-    select
-    ROW_NUMBER() over(order by a.{3} {4}) as RowNum
-    ,a.[Id]
-    ,a.[Name] 
-    ,a.[ParentId]
-    ,a.[ModuleId]
-    ,a.[Type]
-    ,a.[Level]
-    ,a.[PageUrl]
-    ,a.[Ico]
-    ,a.[Status]
-    ,a.[Sort]
-    ,a.[CreateTime]
-    ,a.[ModifyTime]
-    ,a.[CreateUser]
-    ,a.[ModifyUser]
-    ,a.[IsDelete]
-    ,case b.Name when '0' then '无' else b.Name end ParentName
-    ,c.Name ModuleName
-    FROM SysMenu a
-    INNER JOIN SysModule c on c.Id = a.ModuleId
-    LEFT JOIN SysMenu b on b.Id = a.ParentId
-    WHERE a.IsDelete = 0 {0}
-) as t where RowNum between {1} and {2}
-", sqlWhere, condition.StartNum, condition.EndNum, string.IsNullOrEmpty(condition.SortName) ? "ModifyTime" : condition.SortName, condition.IsSortByDesc ? "desc" : "asc");
-            #endregion
-            return sql;
-        }
-
-        /// <summary>
-        /// 获取总数条件字符串
-        /// </summary>
-        /// <param name="condition"></param>
-        /// <param name="sqlWhere"></param>
-        /// <returns></returns>
-        private StringBuilder GetListCountSql(SysMenuCondition condition, StringBuilder sqlWhere)
-        {
-            #region sql
-            StringBuilder countSql = new StringBuilder();
-            countSql.AppendFormat(@"
-select
-    count(1)
-    FROM SysMenu a
-    INNER JOIN SysModule c on c.Id = a.ModuleId
-    LEFT JOIN SysMenu b on b.Id = a.ParentId
-    WHERE a.IsDelete = 0 {0}
-", sqlWhere);
-            #endregion
-            return countSql;
+            return source.WhereIf(true, t => t.IsDelete == false)
+                .WhereIf(!string.IsNullOrEmpty(condition.Id), t => t.Id == condition.Id)
+                .WhereIf(!string.IsNullOrEmpty(condition.Name), t => t.Name.Contains(condition.Name))
+                .WhereIf(!string.IsNullOrEmpty(condition.Parent) && condition.Parent != "0", t => t.ParentMenu.Id == condition.Parent)
+                .WhereIf(!string.IsNullOrEmpty(condition.Module), t => t.Module.Id == condition.Module);
         }
 
         /// <summary>

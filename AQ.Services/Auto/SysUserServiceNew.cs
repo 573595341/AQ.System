@@ -50,8 +50,8 @@ namespace AQ.Services
             var result = new ListPagedResult<SysUserViewModel>();
             try
             {
-                var data = _repository.GetAllList().ToList();
-                result.Data = _mapper.Map<List<SysUserViewModel>>(data.Where(d => !d.IsDelete && d.Status == 1));
+                var datas = _repository.GetAllList(item => item.IsDelete == false).ToList();
+                result.Data = _mapper.Map<List<SysUserViewModel>>(datas);
                 result.ResultCode = CommonResults.Success.ResultCode;
                 result.ResultMsg = CommonResults.Success.ResultMsg;
             }
@@ -74,15 +74,12 @@ namespace AQ.Services
             var result = new ListPagedResult<SysUserViewModel>();
             try
             {
-                var data = _repository.GetListPaged(condition);
-                data.Data.ForEach(d =>
-                {
-                    result.Data.Add(_mapper.Map<SysUserViewModel>(d));
-                });
+                var datas = _repository.GetListPaged(condition);
+                result.Data = _mapper.Map<List<SysUserViewModel>>(datas.Data);
                 result.PageIndex = condition.PageIndex;
                 result.PageSize = condition.PageSize;
-                result.PageCount = data.PageCount;
-                result.TotalData = data.TotalData;
+                result.PageCount = datas.PageCount;
+                result.TotalData = datas.TotalData;
                 result.ResultCode = CommonResults.Success.ResultCode;
                 result.ResultMsg = CommonResults.Success.ResultMsg;
             }
@@ -144,11 +141,8 @@ namespace AQ.Services
                 }
                 var data = _mapper.Map<SysUser>(model);
                 data.Id = _keyRepository.GenerateKey("Id", "SysUser");
-                data.CreateUser = string.Empty;
-                data.ModifyUser = string.Empty;
                 _repository.Add(data);
-                //=  != null ? result = CommonResults.Success : CommonResults.Fail;
-                result = _repository.SaveChanges() > 0 ? CommonResults.Success : CommonResults.Fail;
+                result = _repository.SaveChanges() > -1 ? CommonResults.Success : CommonResults.Fail;
             }
             catch (Exception ex)
             {
@@ -178,10 +172,7 @@ namespace AQ.Services
                 var data = _mapper.Map<SysUser>(model);
                 data.ModifyTime = DateTime.Now;
                 _repository.Update(data);
-                if (_repository.SaveChanges() > 0)
-                {
-                    result = CommonResults.Success;
-                }
+                result = _repository.SaveChanges() > -1 ? CommonResults.Success : CommonResults.Fail;
             }
             catch (Exception ex)
             {
@@ -207,7 +198,8 @@ namespace AQ.Services
             }
             try
             {
-                result = _repository.DeleteLogical(keys) > 0 ? CommonResults.Success : CommonResults.Fail;
+                _repository.DeleteLogical(keys);
+                result = _repository.SaveChanges() > -1 ? CommonResults.Success : CommonResults.Fail;
             }
             catch (Exception ex)
             {
@@ -233,7 +225,7 @@ namespace AQ.Services
             try
             {
                 _repository.Delete(id);
-                result = _repository.SaveChanges() > 0 ? CommonResults.Success : CommonResults.Fail;
+                result = _repository.SaveChanges() > -1 ? CommonResults.Success : CommonResults.Fail;
             }
             catch (Exception ex)
             {
@@ -259,7 +251,8 @@ namespace AQ.Services
             }
             try
             {
-                result = _repository.UpdateStatus(status, keys) > 0 ? CommonResults.Success : CommonResults.Fail;
+                _repository.UpdateStatus(status, keys);
+                result = _repository.SaveChanges() > -1 ? CommonResults.Success : CommonResults.Fail;
             }
             catch (Exception ex)
             {
